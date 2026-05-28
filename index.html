@@ -901,7 +901,8 @@
   </div>
   <ul class="nav-links">
     <li><a href="#planes">Planes</a></li>
-    <li><a href="#cobertura">Cobertura</a></li>
+    <li><a href="#speedtest">Test de Velocidad</a></li>
+        <li><a href="#cobertura">Cobertura</a></li>
     <li><a href="#nosotros">Nosotros</a></li>
     <li><a href="#contacto">Contacto</a></li>
     <li><a href="#contacto" class="nav-cta">Contratar</a></li>
@@ -1074,7 +1075,77 @@
 </section>
 
 <!-- COVERAGE -->
-<section class="coverage-section" id="cobertura">
+
+  <!-- ——— SECCIÓN DE SPEEDTEST (DISEÑO ASIMÉTRICO: TEST IZQUIERDA + RECOMENDACIONES DERECHA) ——— -->
+  <section class="coverage-section" id="speedtest" style="padding: 80px 0;">
+    <div class="container" style="max-width: 1100px; margin: 0 auto; width: 100%;">
+      
+      <p class="section-label">Herramientas de Red</p>
+      <h2 class="section-title">REVISA TU CONEXIÓN</h2>
+      
+      <!-- Contenedor Flex con soporte responsivo: 2 columnas en PC, 1 en celulares -->
+      <div style="display: flex; flex-wrap: wrap; gap: 40px; margin-top: 40px; align-items: flex-start;">
+        
+        <!-- COLUMNA IZQUIERDA: Cuadro Flotante Estilizado con los Botones de Test -->
+        <div class="why-card" style="flex: 1; min-width: 290px; padding: 40px 25px; text-align: center; box-shadow: 0 20px 40px rgba(4, 13, 46, 0.5); display: flex; flex-direction: column; gap: 20px; margin: 0;">
+          <div class="why-icon" style="margin: 0 auto 10px;">⏱️</div>
+          <h3 class="why-title" style="font-size: 1.6rem; margin-bottom: 10px; letter-spacing: 1px;">PLATAFORMAS DE MEDICIÓN</h3>
+          
+          <!-- Botón Ookla directo -->
+          <a href="https://www.speedtest.net" target="_blank" class="btn-primary" style="width: 100%; justify-content: center; padding: 15px; text-decoration: none;">
+            Medir con Speedtest Ookla ↗
+          </a>
+          
+          <!-- Botón Fast directo -->
+          <a href="https://fast.com" target="_blank" class="btn-secondary" style="width: 100%; justify-content: center; padding: 15px; text-decoration: none;">
+            Medir con Fast.com (Netflix) ↗
+          </a>
+        </div>
+
+        <!-- COLUMNA DERECHA: Recomendaciones en renglones anchos y completos -->
+        <div style="flex: 2; min-width: 320px; display: flex; flex-direction: column; gap: 35px;">
+          
+          <!-- Bloque de Consejos para medir -->
+          <div>
+            <h3 class="why-title" style="font-size: 1.5rem; color: #ffffff; letter-spacing: 1px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+              <span style="color: var(--blue-electric);">📝</span> CONSEJOS PARA UNA MEDICIÓN CORRECTA
+            </h3>
+            <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 14px;">
+              <li style="font-family: 'Barlow', sans-serif; color: var(--text-muted); font-size: 1.05rem; line-height: 1.6;">
+                <strong style="color: #ffffff;">✔ Conexión Física por Cable:</strong> Es ideal realizar la prueba conectando un cable de red directo desde tu computadora al router, ya que las mediciones por WiFi suelen verse afectadas por la distancia, los muros y las interferencias del entorno.
+              </li>
+              <li style="font-family: 'Barlow', sans-serif; color: var(--text-muted); font-size: 1.05rem; line-height: 1.6;">
+                <strong style="color: #ffffff;">✔ Detén los Consumos Activos:</strong> Asegúrate de pausar cualquier descarga de archivos, actualizaciones automáticas de consolas de videojuegos o reproducción de video en alta definición mientras realizas el test para evitar falsos resultados.
+              </li>
+              <li style="font-family: 'Barlow', sans-serif; color: var(--text-muted); font-size: 1.05rem; line-height: 1.6;">
+                <strong style="color: #ffffff;">✔ Un Solo Dispositivo a la Vez:</strong> Deja un único equipo ejecutando la prueba para obtener un reflejo completamente fiel y transparente del ancho de banda real que está ingresando a tu hogar.
+              </li>
+            </ul>
+          </div>
+
+          <!-- Bloque de Soluciones ante Lentitud -->
+          <div style="border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 25px;">
+            <h3 class="why-title" style="font-size: 1.5rem; color: #ffffff; letter-spacing: 1px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+              <span style="color: var(--blue-glow);">💡</span> ¿NOTAS BAJO RENDIMIENTO EN TU NAVEGACIÓN?
+            </h3>
+            <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 14px;">
+              <li style="font-family: 'Barlow', sans-serif; color: var(--text-muted); font-size: 1.05rem; line-height: 1.6;">
+                <strong style="color: #ffffff;">• Posible Saturación Interna:</strong> Muchas veces la lentitud se debe a procesos automáticos o a múltiples dispositivos conectados simultáneamente (celulares, televisores, descargas en segundo plano) consumiendo el ancho de banda contratado sin que te des cuenta.
+              </li>
+              <li style="font-family: 'Barlow', sans-serif; color: var(--text-muted); font-size: 1.05rem; line-height: 1.6;">
+                <strong style="color: #ffffff;">• Reinicio Eléctrico de tus Equipos (Solución Rápida):</strong> Desconecta tu equipo ONU (Módem) o Router de la toma de corriente durante 10 segundos y vuélvelo a conectar. Esta acción libera la memoria caché colgada de los dispositivos inalámbricos, optimiza las frecuencias de los canales de transmisión y restablece el servicio a su velocidad óptima de forma inmediata.
+              </li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+      
+    </div>
+  </section>
+
+  <section class="coverage-section" id="cobertura">
   <div class="coverage-content">
     <div>
       <p class="section-label">Área de Cobertura</p>
@@ -1294,7 +1365,8 @@ function enviarWhatsApp() {
     </div>
     <ul class="footer-links">
       <li><a href="#planes">Planes</a></li>
-      <li><a href="#cobertura">Cobertura</a></li>
+      <li><a href="#speedtest">Test de Velocidad</a></li>
+        <li><a href="#cobertura">Cobertura</a></li>
       <li><a href="#nosotros">Nosotros</a></li>
       <li><a href="#contacto">Contacto</a></li>
       <li><a href="mailto:mc2025comunicaciones@gmail.com">mc2025comunicaciones@gmail.com</a></li>
