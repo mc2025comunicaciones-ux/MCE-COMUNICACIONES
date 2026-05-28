@@ -1633,94 +1633,111 @@ function enviarWhatsApp() {
 </footer>
 
 <script>
-  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyr0AOX8IBYQxeXvhXKRpne0sFdtBniI0bIH6Dd7EBOSnpXmsGzqcWpVCnW5xTY05ZJ/exec';
+  // MÉTODO DIRECTO A LA BASE DE DATOS SIN DEPENDER DE APPS SCRIPT (CORS BYPASS)
+  const SPREADSHEET_ID = '1UsNouaSVr7fUzufxnBorAna1JcUYQriyGELLpyY9YIQ';
 
   document.addEventListener('DOMContentLoaded', () => {
     const input = document.getElementById('cedulaInput');
     if (input) input.addEventListener('keypress', e => { if (e.key === 'Enter') buscarCliente(); });
   });
 
-  async function buscarCliente() {
-    const input      = document.getElementById('cedulaInput');
-    const inputRaw   = input ? input.value.trim() : '';
-    // Limpiamos la cédula quitando puntos, comas o espacios por si acaso
-    const cedula     = inputRaw.replace(/[.,\s]/g, "");
-    const resultDiv  = document.getElementById('gestionResult');
+  function buscarCliente() {
+    const input = document.getElementById('cedulaInput');
+    const inputRaw = input ? input.value.trim() : '';
+    const cedula = inputRaw.replace(/[.,\s]/g, ""); // Quitar puntos, comas y espacios
+    
+    const resultDiv = document.getElementById('gestionResult');
     const loadingDiv = document.getElementById('gestionLoading');
-    const btn        = document.getElementById('buscarBtn');
+    const btn = document.getElementById('buscarBtn');
 
-    if (!cedula) { mostrarError('Por favor ingresa tu número de cédula.'); return; }
+    if (!cedula) {
+      mostrarError('Por favor ingresa tu número de cédula.');
+      return;
+    }
     
     resultDiv.classList.remove('visible');
     resultDiv.innerHTML = '';
     loadingDiv.classList.add('visible');
-    btn.disabled = true;
+    if (btn) btn.disabled = true;
 
-    try {
-      // Llamada directa al Web App con fetch y el parámetro de la cédula
-      const response = await fetch(`${APPS_SCRIPT_URL}?cedula=${cedula}`);
-      if (!response.ok) throw new Error('Error en la red.');
-      
-      const resData = await response.json();
-      
-      loadingDiv.classList.remove('visible');
-      btn.disabled = false;
+    // Usamos el endpoint gviz/tq público de Google que no tiene restricciones CORS agresivas si el documento está compartido como lector
+    const urlApi = 'https://docs.google.com/spreadsheets/d/' + SPREADSHEET_ID + '/gviz/tq?t=' + Date.now();
 
-      // Suponemos que el Web App devuelve un JSON estructurado o con los campos del cliente, 
-      // o un { success: false } si no existe. Evaluamos dinámicamente:
-      if (resData.success === false || !resData || resData.error || (Array.isArray(resData) && resData.length === 0)) {
-        mostrarError(`No encontramos ningún cliente con la cédula <strong>${inputRaw}</strong>.<br>Verifica el número o contáctanos.`);
-        return;
-      }
+    fetch(urlApi)
+      .then(response => {
+        if (!response.ok) throw new Error("Error en red");
+        return response.text();
+      })
+      .then(responseText => {
+        loadingDiv.classList.remove('visible');
+        if (btn) btn.disabled = false;
 
-      // Si retorna un array directamente (ej. una fila de columnas) o un objeto estructurado
-      let cliente = resData;
-      if (resData.data) cliente = resData.data; // Compatibilidad por si el script mete el objeto en una propiedad data
+        // Extraer y limpiar el JSON empaquetado que devuelve Google
+        const inicioJson = responseText.indexOf('{');
+        const finJson = responseText.lastIndexOf('}');
+        if (inicioJson === -1 || finJson === -1) throw new Error("Formato inválido");
+        
+        const jsonLimpio = JSON.parse(responseText.substring(inicioJson, finJson + 1));
+        const filas = jsonLimpio.table.rows;
 
-      mostrarResultado(cliente, cedula);
+        if (!filas || filas.length === 0) {
+          mostrarError("La base de datos se encuentra vacía temporalmente.");
+          return;
+        }
 
-    } catch(err) {
-      console.error('[MCE Web App]', err);
-      loadingDiv.classList.remove('visible');
-      btn.disabled = false;
-      mostrarError('Hubo un problema de conexión con el servidor de autogestión. Intenta de nuevo o contáctanos directamente.');
-    }
+        let filaEncontrada = null;
+        
+        // Iterar las filas para encontrar la cédula en la columna B (índice 1)
+        for (let i = 0; i < filas.length; i++) {
+          const celda = filas[i].c[1];
+          if (celda) {
+            const vPuro = celda.v ? celda.v.toString().trim() : "";
+            const vFormateado = celda.f ? celda.f.toString().trim() : "";
+            
+            if (vPuro === cedula || vFormateado === cedula || vPuro.replace(/[.,]/g, "") === cedula) {
+              filaEncontrada = filas[i].c;
+              break;
+            }
+          }
+        }
+
+        if (!filaEncontrada) {
+          mostrarError("No encontramos ningún cliente con la cédula <strong>" + inputRaw + "</strong>.<br>Verifica el número o contáctanos para ayudarte.");
+          return;
+        }
+
+        // Mapear columnas: A=0(Nombre), B=1(Cédula), C=2(Plan), D=3(Estado), E=4(Vencimiento), F=5(Valor)
+        const cliente = {
+          nombre: filaEncontrada[0] ? filaEncontrada[0].v : 'Usuario MCE',
+          plan: filaEncontrada[2] ? filaEncontrada[2].v : 'Plan Contratado',
+          estado: filaEncontrada[3] ? filaEncontrada[3].v.toString().trim() : 'ACTIVO',
+          fecha: filaEncontrada[4] ? (filaEncontrada[4].f || filaEncontrada[4].v) : '—',
+          valor: filaEncontrada[5] ? (filaEncontrada[5].f || filaEncontrada[5].v) : '—'
+        };
+
+        mostrarResultado(cliente, cedula);
+      })
+      .catch(err => {
+        console.error(err);
+        loadingDiv.classList.remove('visible');
+        if (btn) btn.disabled = false;
+        mostrarError("Error al conectar con la base de datos de Google. Asegúrate de que el archivo esté compartido en modo 'Cualquier persona con el enlace puede ver' como Lector.");
+      });
   }
 
   function mostrarResultado(cliente, cedula) {
-    // Manejo inteligente por si viene en formato Array [Nombre, Cedula, Plan, Estado, Fecha, Valor] 
-    // o en formato de Objeto Clave-Valor {nombre: '', plan: '', ...}
-    let nombre = '—';
-    let plan   = '—';
-    let estado = '';
-    let fecha  = '—';
-    let saldo  = '—';
-
-    if (Array.isArray(cliente)) {
-      nombre = cliente[0] || '—';
-      plan   = cliente[2] || '—';
-      estado = cliente[3] || '';
-      fecha  = cliente[4] || '—';
-      saldo  = cliente[5] || '';
-    } else if (typeof cliente === 'object') {
-      nombre = cliente.nombre || cliente.Nombre || cliente.row?.nombre || '—';
-      plan   = cliente.plan || cliente.Plan || '—';
-      estado = cliente.estado || cliente.Estado || '';
-      fecha  = cliente.fecha || cliente.Fecha || cliente.vencimiento || '—';
-      saldo  = cliente.valor || cliente.Valor || cliente.saldo || '';
-    }
-
-    const esActivo    = estado.toLowerCase().includes('activo') || estado.toLowerCase().includes('dia') || estado.toLowerCase().includes('día');
+    const estado = cliente.estado || '';
+    const esActivo = estado.toLowerCase().includes('activo') || estado.toLowerCase().includes('dia') || estado.toLowerCase().includes('día');
     const estadoClass = esActivo ? 'activo' : 'suspendido';
-    const waMsg = encodeURIComponent(`Hola MCE Comunicaciones! Soy ${nombre}, cédula ${cedula}. Quiero información sobre mi servicio.`);
+    const waMsg = encodeURIComponent("Hola MCE Comunicaciones! Consulté mi estado con la cédula " + cedula + ". Requiero soporte.");
 
     document.getElementById('gestionResult').innerHTML = `
       <div class="gestion-result-card">
         <div class="gestion-result-title">✅ Cliente Encontrado</div>
         <div class="gestion-info-grid">
-          <div class="gestion-info-item" style="grid-column:1/-1">
+          <div class="gestion-info-item" style="grid-column: 1 / -1">
             <div class="gestion-info-label">Nombre Completo</div>
-            <div class="gestion-info-value" style="font-size:1.15rem; text-transform: uppercase;">${nombre}</div>
+            <div class="gestion-info-value" style="font-size: 1.15rem; text-transform: uppercase; color: #ffffff;">${cliente.nombre}</div>
           </div>
           <div class="gestion-info-item">
             <div class="gestion-info-label">Cédula</div>
@@ -1728,25 +1745,30 @@ function enviarWhatsApp() {
           </div>
           <div class="gestion-info-item">
             <div class="gestion-info-label">Plan Contratado</div>
-            <div class="gestion-info-value">${plan}</div>
+            <div class="gestion-info-value">${cliente.plan}</div>
           </div>
           <div class="gestion-info-item">
             <div class="gestion-info-label">Estado del Servicio</div>
             <div class="gestion-info-value">
-              <span class="gestion-status-badge ${estadoClass}">${estado || 'Desconocido'}</span>
+              <span class="gestion-status-badge ${estadoClass}">${estado || 'ACTIVO'}</span>
             </div>
           </div>
           <div class="gestion-info-item">
-            <div class="gestion-info-label">Próximo Pago</div>
-            <div class="gestion-info-value">${fecha}</div>
+            <div class="gestion-info-label">Próximo Pago / Corte</div>
+            <div class="gestion-info-value">${cliente.fecha}</div>
           </div>
-          ${saldo ? `<div class="gestion-info-item">
+          <div class="gestion-info-item">
             <div class="gestion-info-label">Valor Mensual</div>
-            <div class="gestion-info-value">$${saldo}</div>
-          </div>` : ''}
+            <div class="gestion-info-value">${cliente.valor}</div>
+          </div>
         </div>
-        <a href="https://wa.me/573241100037?text=${waMsg}" target="_blank" class="gestion-whatsapp-btn">
-          💬 Hablar con Soporte por WhatsApp
+        
+        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; margin-top: 15px; font-size: 0.8rem; color: #94a3b8; line-height: 1.4;">
+          📌 <strong>Recaudo Digital:</strong> Recuerda reportar tus pagos a través de canales digitales. MCE opera bajo un modelo exclusivo por Nequi y Daviplata. No se recibe efectivo.
+        </div>
+
+        <a href="https://wa.me/573241100037?text=${waMsg}" target="_blank" class="gestion-whatsapp-btn" style="margin-top: 15px;">
+          💬 Reportar Pago / WhatsApp
         </a>
       </div>`;
     document.getElementById('gestionResult').classList.add('visible');
@@ -1755,10 +1777,10 @@ function enviarWhatsApp() {
   function mostrarError(msg) {
     document.getElementById('gestionResult').innerHTML = `
       <div class="gestion-result-card error-card">
-        <div class="gestion-result-title error-title">⚠️ No Encontrado</div>
-        <p style="color:rgba(255,255,255,0.75);font-size:.95rem;line-height:1.6">${msg}</p>
-        <a href="https://wa.me/573241100037" target="_blank" class="gestion-whatsapp-btn" style="margin-top:16px">
-          💬 Contactar Soporte por WhatsApp
+        <div class="gestion-result-title error-title">⚠️ Estado de la Consulta</div>
+        <p style="color: rgba(255,255,255,0.8); font-size: 0.95rem; line-height: 1.6; text-align: center;">${msg}</p>
+        <a href="https://wa.me/573241100037" target="_blank" class="gestion-whatsapp-btn" style="margin-top: 16px;">
+          💬 Contactar Soporte MCE
         </a>
       </div>`;
     document.getElementById('gestionResult').classList.add('visible');
