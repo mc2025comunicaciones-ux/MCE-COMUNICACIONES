@@ -1706,13 +1706,14 @@ function enviarWhatsApp() {
           return;
         }
 
-        // Mapear columnas: A=0(Nombre), B=1(Cédula), C=2(Plan), D=3(Estado), E=4(Vencimiento), F=5(Valor)
+                // Mapear columnas: A=0(Nombre), B=1(Cédula), C=2(Plan), D=3(Estado), E=4(Vencimiento), F=5(Valor), G=6(Vereda)
         const cliente = {
           nombre: filaEncontrada[0] ? filaEncontrada[0].v : 'Usuario MCE',
           plan: filaEncontrada[2] ? filaEncontrada[2].v : 'Plan Contratado',
           estado: filaEncontrada[3] ? filaEncontrada[3].v.toString().trim() : 'ACTIVO',
           fecha: filaEncontrada[4] ? (filaEncontrada[4].f || filaEncontrada[4].v) : '—',
-          valor: filaEncontrada[5] ? (filaEncontrada[5].f || filaEncontrada[5].v) : '—'
+          valor: filaEncontrada[5] ? (filaEncontrada[5].f || filaEncontrada[5].v) : '—',
+          vereda: filaEncontrada[6] ? filaEncontrada[6].v : 'No especificada'
         };
 
         mostrarResultado(cliente, cedula);
@@ -1756,6 +1757,10 @@ function enviarWhatsApp() {
           <div class="gestion-info-item">
             <div class="gestion-info-label">Próximo Pago / Corte</div>
             <div class="gestion-info-value">${cliente.fecha}</div>
+          </div>
+          <div class="gestion-info-item">
+            <div class="gestion-info-label">Vereda / Ubicación</div>
+            <div class="gestion-info-value">${cliente.vereda}</div>
           </div>
           <div class="gestion-info-item">
             <div class="gestion-info-label">Valor Mensual</div>
