@@ -1706,15 +1706,14 @@ function enviarWhatsApp() {
           return;
         }
 
-                // Mapear columnas: A=0(Nombre), B=1(Cédula), C=2(Plan), D=3(Estado), E=4(Vencimiento), F=5(Valor), G=6(Vereda), H=7(Recibo PDF)
+        // Mapear columnas: A=0(Nombre), B=1(Cédula), C=2(Plan), D=3(Estado), E=4(Vencimiento), F=5(Valor), G=6(Vereda)
         const cliente = {
           nombre: filaEncontrada[0] ? filaEncontrada[0].v : 'Usuario MCE',
           plan: filaEncontrada[2] ? filaEncontrada[2].v : 'Plan Contratado',
           estado: filaEncontrada[3] ? filaEncontrada[3].v.toString().trim() : 'ACTIVO',
           fecha: filaEncontrada[4] ? (filaEncontrada[4].f || filaEncontrada[4].v) : '—',
           valor: filaEncontrada[5] ? (filaEncontrada[5].f || filaEncontrada[5].v) : '—',
-          vereda: filaEncontrada[6] ? filaEncontrada[6].v : 'No especificada',
-          recibo: filaEncontrada[7] ? filaEncontrada[7].v : null
+          vereda: filaEncontrada[6] ? filaEncontrada[6].v : 'No especificada'
         };
 
         mostrarResultado(cliente, cedula);
@@ -1746,6 +1745,10 @@ function enviarWhatsApp() {
             <div class="gestion-info-value">${cedula}</div>
           </div>
           <div class="gestion-info-item">
+            <div class="gestion-info-label">Vereda / Ubicación</div>
+            <div class="gestion-info-value" style="color: #60a5fa; font-weight: 500;">${cliente.vereda}</div>
+          </div>
+          <div class="gestion-info-item">
             <div class="gestion-info-label">Plan Contratado</div>
             <div class="gestion-info-value">${cliente.plan}</div>
           </div>
@@ -1759,11 +1762,7 @@ function enviarWhatsApp() {
             <div class="gestion-info-label">Próximo Pago / Corte</div>
             <div class="gestion-info-value">${cliente.fecha}</div>
           </div>
-          <div class="gestion-info-item">
-            <div class="gestion-info-label">Vereda / Ubicación</div>
-            <div class="gestion-info-value" style="color: #60a5fa; font-weight: 500;">${cliente.vereda}</div>
-          </div>
-          <div class="gestion-info-item">
+          <div class="gestion-info-item" style="grid-column: 1 / -1">
             <div class="gestion-info-label">Valor Mensual</div>
             <div class="gestion-info-value">${cliente.valor}</div>
           </div>
@@ -1773,17 +1772,35 @@ function enviarWhatsApp() {
           📌 <strong>Recaudo Digital:</strong> Recuerda reportar tus pagos a través de canales digitales. MCE opera bajo un modelo exclusivo por Nequi y Daviplata 3138342442. No se recibe efectivo.
         </div>
 
-        ${cliente.recibo && cliente.recibo.toString().trim().startsWith('http') ? `
-        <a href="${cliente.recibo}" target="_blank" class="gestion-whatsapp-btn" style="margin-top: 15px; background: linear-gradient(135deg, #2563eb, #1d4ed8); border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 4px 12px rgba(37,99,235,0.3); text-shadow: none;">
+        <!-- Botón de Recibo PDF dinámico -->
+        <a id="tuBotonDePdf" href="#" target="_blank" class="gestion-whatsapp-btn" style="display: none; margin-top: 15px; background: linear-gradient(135deg, #2563eb, #1d4ed8); border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 4px 12px rgba(37,99,235,0.3);">
           📄 Descargar Último Recibo (PDF)
         </a>
-        ` : ''}
 
         <a href="https://wa.me/573241100037?text=${waMsg}" target="_blank" class="gestion-whatsapp-btn" style="margin-top: 15px;">
           💬 Reportar Pago / WhatsApp
         </a>
       </div>`;
     document.getElementById('gestionResult').classList.add('visible');
+
+    // LLAMADO AL BACKEND DE GOOGLE APPS SCRIPT PARA VALIDAR SI EXISTE EL RECIBO EN LA CARPETA
+    // Reemplaza esta URL por la URL de tu Web App de Google Apps Script (cuando le das en Implementar)
+    const urlScriptWebApp = "https://script.google.com/macros/s/AKfycbz_REEMPLAZA_CON_TU_ID_DE_DESPLIEGUE/exec?cedula=" + cedula;
+
+    fetch(urlScriptWebApp)
+      .then(res => res.json())
+      .then(resultado => {
+        var botonDescarga = document.getElementById("tuBotonDePdf");
+        if (resultado && resultado.pdf && resultado.pdf !== "No encontrado" && !resultado.pdf.includes("Error")) {
+          botonDescarga.href = resultado.pdf;
+          botonDescarga.style.display = "block"; // Se muestra si se encontró el archivo
+        } else {
+          botonDescarga.style.display = "none"; // Se mantiene oculto si no se encuentra
+        }
+      })
+      .catch(err => {
+        console.log("El PDF aún no está disponible o falta configurar la Web App URL.");
+      });
   }
 
   function mostrarError(msg) {
