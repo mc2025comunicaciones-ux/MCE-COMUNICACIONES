@@ -1706,14 +1706,15 @@ function enviarWhatsApp() {
           return;
         }
 
-                // Mapear columnas: A=0(Nombre), B=1(Cédula), C=2(Plan), D=3(Estado), E=4(Vencimiento), F=5(Valor), G=6(Vereda)
+                // Mapear columnas: A=0(Nombre), B=1(Cédula), C=2(Plan), D=3(Estado), E=4(Vencimiento), F=5(Valor), G=6(Vereda), H=7(Recibo PDF)
         const cliente = {
           nombre: filaEncontrada[0] ? filaEncontrada[0].v : 'Usuario MCE',
           plan: filaEncontrada[2] ? filaEncontrada[2].v : 'Plan Contratado',
           estado: filaEncontrada[3] ? filaEncontrada[3].v.toString().trim() : 'ACTIVO',
           fecha: filaEncontrada[4] ? (filaEncontrada[4].f || filaEncontrada[4].v) : '—',
           valor: filaEncontrada[5] ? (filaEncontrada[5].f || filaEncontrada[5].v) : '—',
-          vereda: filaEncontrada[6] ? filaEncontrada[6].v : 'No especificada'
+          vereda: filaEncontrada[6] ? filaEncontrada[6].v : 'No especificada',
+          recibo: filaEncontrada[7] ? filaEncontrada[7].v : null
         };
 
         mostrarResultado(cliente, cedula);
@@ -1760,7 +1761,7 @@ function enviarWhatsApp() {
           </div>
           <div class="gestion-info-item">
             <div class="gestion-info-label">Vereda / Ubicación</div>
-            <div class="gestion-info-value">${cliente.vereda}</div>
+            <div class="gestion-info-value" style="color: #60a5fa; font-weight: 500;">${cliente.vereda}</div>
           </div>
           <div class="gestion-info-item">
             <div class="gestion-info-label">Valor Mensual</div>
@@ -1771,6 +1772,12 @@ function enviarWhatsApp() {
         <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; margin-top: 15px; font-size: 0.8rem; color: #94a3b8; line-height: 1.4;">
           📌 <strong>Recaudo Digital:</strong> Recuerda reportar tus pagos a través de canales digitales. MCE opera bajo un modelo exclusivo por Nequi y Daviplata 3138342442. No se recibe efectivo.
         </div>
+
+        ${cliente.recibo && cliente.recibo.toString().trim().startsWith('http') ? `
+        <a href="${cliente.recibo}" target="_blank" class="gestion-whatsapp-btn" style="margin-top: 15px; background: linear-gradient(135deg, #2563eb, #1d4ed8); border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 4px 12px rgba(37,99,235,0.3); text-shadow: none;">
+          📄 Descargar Último Recibo (PDF)
+        </a>
+        ` : ''}
 
         <a href="https://wa.me/573241100037?text=${waMsg}" target="_blank" class="gestion-whatsapp-btn" style="margin-top: 15px;">
           💬 Reportar Pago / WhatsApp
