@@ -1732,6 +1732,9 @@ function enviarWhatsApp() {
     const estadoClass = esActivo ? 'activo' : 'suspendido';
     const waMsg = encodeURIComponent("Hola MCE Comunicaciones! Consulté mi estado con la cédula " + cedula + ". Requiero soporte.");
 
+    // URL real de tu aplicación web de Google Apps Script recibida
+    const urlScriptWebApp = "https://script.google.com/macros/s/AKfycbyR7RFQ6Inl2e4uWw2zurA9D9DBcOO9rwDkpM-EBSoLkMwdNOY9G98UIXegtoab-_wR/exec?cedula=" + cedula;
+
     document.getElementById('gestionResult').innerHTML = `
       <div class="gestion-result-card">
         <div class="gestion-result-title">✅ Cliente Encontrado</div>
@@ -1772,8 +1775,8 @@ function enviarWhatsApp() {
           📌 <strong>Recaudo Digital:</strong> Recuerda reportar tus pagos a través de canales digitales. MCE opera bajo un modelo exclusivo por Nequi y Daviplata 3138342442. No se recibe efectivo.
         </div>
 
-        <!-- Botón de Recibo PDF dinámico -->
-        <a id="tuBotonDePdf" href="#" target="_blank" class="gestion-whatsapp-btn" style="display: none; margin-top: 15px; background: linear-gradient(135deg, #2563eb, #1d4ed8); border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 4px 12px rgba(37,99,235,0.3);">
+        <!-- Botón de Recibo PDF dinámico con llamada directa a la Web App de Google Drive -->
+        <a id="tuBotonDePdf" href="#" target="_blank" class="gestion-whatsapp-btn" style="display: none; margin-top: 15px; background: linear-gradient(135deg, #2563eb, #1d4ed8); border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 4px 12px rgba(37,99,235,0.3); text-shadow: none;">
           📄 Descargar Último Recibo (PDF)
         </a>
 
@@ -1783,23 +1786,20 @@ function enviarWhatsApp() {
       </div>`;
     document.getElementById('gestionResult').classList.add('visible');
 
-    // LLAMADO AL BACKEND DE GOOGLE APPS SCRIPT PARA VALIDAR SI EXISTE EL RECIBO EN LA CARPETA
-    // Reemplaza esta URL por la URL de tu Web App de Google Apps Script (cuando le das en Implementar)
-    const urlScriptWebApp = "https://script.google.com/macros/s/AKfycbz_REEMPLAZA_CON_TU_ID_DE_DESPLIEGUE/exec?cedula=" + cedula;
-
+    // Validación automática en segundo plano para encender el botón si el archivo PDF existe
     fetch(urlScriptWebApp)
       .then(res => res.json())
       .then(resultado => {
         var botonDescarga = document.getElementById("tuBotonDePdf");
         if (resultado && resultado.pdf && resultado.pdf !== "No encontrado" && !resultado.pdf.includes("Error")) {
           botonDescarga.href = resultado.pdf;
-          botonDescarga.style.display = "block"; // Se muestra si se encontró el archivo
+          botonDescarga.style.display = "block"; // Muestra el botón si el PDF existe
         } else {
-          botonDescarga.style.display = "none"; // Se mantiene oculto si no se encuentra
+          botonDescarga.style.display = "none";  // Oculto si no hay PDF creado para esta cédula
         }
       })
       .catch(err => {
-        console.log("El PDF aún no está disponible o falta configurar la Web App URL.");
+        console.log("El PDF aún no está listo o requiere configuración de permisos.");
       });
   }
 
