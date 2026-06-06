@@ -1706,7 +1706,7 @@ function enviarWhatsApp() {
           return;
         }
 
-                // Mapear columnas: A=0(Nombre), B=1(Cédula), C=2(Plan), D=3(Estado), E=4(Vencimiento), F=5(Valor), G=6(Vereda), H=7(Recibo PDF)
+                // Mapear columnas: A=0(Nombre), B=1(Cédula), C=2(Plan), D=3(Estado), E=4(Vencimiento), F=5(Valor), G=6(Vereda), H=7(Recibo PDF), I=8(Punto de Conexión)
         const cliente = {
           nombre: filaEncontrada[0] ? filaEncontrada[0].v : 'Usuario MCE',
           plan: filaEncontrada[2] ? filaEncontrada[2].v : 'Plan Contratado',
@@ -1714,7 +1714,8 @@ function enviarWhatsApp() {
           fecha: filaEncontrada[4] ? (filaEncontrada[4].f || filaEncontrada[4].v) : '—',
           valor: filaEncontrada[5] ? (filaEncontrada[5].f || filaEncontrada[5].v) : '—',
           vereda: filaEncontrada[6] ? filaEncontrada[6].v : 'No especificada',
-          recibo: filaEncontrada[7] ? filaEncontrada[7].v : null
+          recibo: filaEncontrada[7] ? filaEncontrada[7].v : null,
+          puntoConexion: filaEncontrada[8] ? filaEncontrada[8].v : null
         };
 
         mostrarResultado(cliente, cedula);
@@ -1767,6 +1768,13 @@ function enviarWhatsApp() {
             <div class="gestion-info-label">Valor Mensual</div>
             <div class="gestion-info-value">${cliente.valor}</div>
           </div>
+          ${cliente.puntoConexion ? `
+          <div class="gestion-info-item" style="grid-column: 1 / -1">
+            <div class="gestion-info-label">📡 Punto de Conexión NAP</div>
+            <div class="gestion-info-value" style="display:inline-flex; align-items:center; gap:10px; background: rgba(37,99,235,0.18); border: 1px solid rgba(59,130,246,0.4); border-radius: 10px; padding: 8px 18px; font-size: 1.1rem; font-weight: 700; color: #93c5fd; letter-spacing: 1.5px; text-transform: uppercase;">
+              <span style="font-size:1.3rem;">🔌</span> ${cliente.puntoConexion}
+            </div>
+          </div>` : ''}
         </div>
         
         <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; margin-top: 15px; font-size: 0.8rem; color: #94a3b8; line-height: 1.4;">
