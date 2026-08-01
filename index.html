@@ -1143,6 +1143,129 @@
     100% { transform: scale(1); opacity: 1; }
   }
 
+  /* ——— DASHBOARD MODE ——— */
+  body.dashboard-mode .app-section,
+  body.dashboard-mode .coverage-strip {
+    display: none;
+  }
+  body.dashboard-mode .app-section.active {
+    display: block;
+    animation: fadeUp 0.4s ease both;
+  }
+  body.dashboard-mode .hero.app-section.active {
+    display: flex;
+  }
+  body.dashboard-mode .hero.active ~ .coverage-strip { display: flex; }
+
+  .nav-links a.nav-active {
+    color: var(--white);
+  }
+  .nav-links a.nav-active::after {
+    content: '';
+    display: block;
+    height: 2px;
+    background: var(--blue-electric);
+    margin-top: 4px;
+    border-radius: 2px;
+  }
+
+  .section-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(59,130,246,0.3);
+    color: var(--blue-light);
+    text-decoration: none;
+    padding: 8px 18px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .section-back:hover {
+    background: rgba(37,99,235,0.18);
+    border-color: var(--blue-electric);
+  }
+
+  /* ——— HOME DASHBOARD GRID ——— */
+  .dash-grid {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    max-width: 1100px;
+    margin: 56px auto 0;
+  }
+
+  .dash-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 18px;
+    padding: 28px 24px;
+    text-align: left;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: transform 0.25s, border-color 0.25s, background 0.25s;
+  }
+
+  .dash-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(59, 130, 246, 0.5);
+    background: rgba(37, 99, 235, 0.1);
+  }
+
+  .dash-card-icon {
+    font-size: 1.8rem;
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: rgba(37, 99, 235, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .dash-card-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+
+  .dash-card-desc {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.5;
+  }
+
+  .dash-intro {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--blue-electric);
+    margin-top: 56px;
+  }
+
+  @media (max-width: 900px) {
+    .dash-grid { margin-top: 40px; }
+  }
+
   /* ——— RESPONSIVE ——— */
   @media (max-width: 900px) {
     .hero-visual, .signal-rings { display: none; }
@@ -1157,7 +1280,7 @@
   }
 </style>
 </head>
-<body>
+<body class="dashboard-mode">
 
 <!-- WhatsApp Float -->
 <a href="https://wa.me/573241100037" class="whatsapp-float" title="Escríbenos por WhatsApp" aria-label="WhatsApp">💬</a>
@@ -1169,17 +1292,18 @@
     <span class="nav-brand">MCE COMUNICACIONES</span>
   </div>
   <ul class="nav-links">
-    <li><a href="#planes">Planes</a></li>
-    <li><a href="#speedtest">Test de Velocidad</a></li>
-        <li><a href="#cobertura">Cobertura</a></li>
-    <li><a href="#nosotros">Nosotros</a></li>
-    <li><a href="#contacto">Contacto</a></li>
-    <li><a href="#gestion" class="nav-cta">👤 Gestión Cliente</a></li>
+    <li><a href="#inicio" data-section="inicio" onclick="showSection('inicio');return false;">🏠 Inicio</a></li>
+    <li><a href="#planes" data-section="planes" onclick="showSection('planes');return false;">Planes</a></li>
+    <li><a href="#speedtest" data-section="speedtest" onclick="showSection('speedtest');return false;">Test de Velocidad</a></li>
+        <li><a href="#cobertura" data-section="cobertura" onclick="showSection('cobertura');return false;">Cobertura</a></li>
+    <li><a href="#nosotros" data-section="nosotros" onclick="showSection('nosotros');return false;">Nosotros</a></li>
+    <li><a href="#contacto" data-section="contacto" onclick="showSection('contacto');return false;">Contacto</a></li>
+    <li><a href="#gestion" data-section="gestion" class="nav-cta" onclick="showSection('gestion');return false;">👤 Gestión Cliente</a></li>
   </ul>
 </nav>
 
 <!-- HERO -->
-<section class="hero" id="inicio">
+<section class="hero app-section active" id="inicio">
   <div class="hero-bg"></div>
   <div class="hero-grid"></div>
 
@@ -1197,9 +1321,43 @@
       Megas dedicadas, sin compartir, con la estabilidad que tu hogar y negocio necesitan.
     </p>
     <div class="hero-actions">
-      <a href="#planes" class="btn-primary">Ver Planes ↓</a>
-      <a href="#contacto" class="btn-secondary">📞 Contáctanos</a>
+      <a href="#planes" class="btn-primary" onclick="showSection('planes');return false;">Ver Planes ↓</a>
+      <a href="#contacto" class="btn-secondary" onclick="showSection('contacto');return false;">📞 Contáctanos</a>
     </div>
+  </div>
+
+  <p class="dash-intro">Elige un apartado para verlo</p>
+  <div class="dash-grid">
+    <a class="dash-card" href="#planes" onclick="showSection('planes');return false;">
+      <div class="dash-card-icon">📶</div>
+      <div class="dash-card-title">Planes</div>
+      <div class="dash-card-desc">Conoce las velocidades y precios de Internet Dedicado.</div>
+    </a>
+    <a class="dash-card" href="#speedtest" onclick="showSection('speedtest');return false;">
+      <div class="dash-card-icon">⚡</div>
+      <div class="dash-card-title">Test de Velocidad</div>
+      <div class="dash-card-desc">Revisa la velocidad real de tu conexión al instante.</div>
+    </a>
+    <a class="dash-card" href="#cobertura" onclick="showSection('cobertura');return false;">
+      <div class="dash-card-icon">🗺️</div>
+      <div class="dash-card-title">Cobertura</div>
+      <div class="dash-card-desc">Consulta las zonas rurales donde ya tenemos servicio.</div>
+    </a>
+    <a class="dash-card" href="#nosotros" onclick="showSection('nosotros');return false;">
+      <div class="dash-card-icon">🏡</div>
+      <div class="dash-card-title">Nosotros</div>
+      <div class="dash-card-desc">Por qué elegir a MCE Comunicaciones para tu hogar o negocio.</div>
+    </a>
+    <a class="dash-card" href="#contacto" onclick="showSection('contacto');return false;">
+      <div class="dash-card-icon">☎️</div>
+      <div class="dash-card-title">Contacto</div>
+      <div class="dash-card-desc">Horarios de atención, canales y formulario de contacto.</div>
+    </a>
+    <a class="dash-card" href="#gestion" onclick="showSection('gestion');return false;">
+      <div class="dash-card-icon">👤</div>
+      <div class="dash-card-title">Gestión Cliente</div>
+      <div class="dash-card-desc">Consulta el estado de tu servicio con tu número de cédula.</div>
+    </a>
   </div>
 
   <div class="signal-rings">
@@ -1231,7 +1389,8 @@
 </div>
 
 <!-- PLANS -->
-<section class="plans-section" id="planes">
+<section class="plans-section app-section" id="planes">
+  <a class="section-back" href="#inicio" onclick="showSection('inicio');return false;">← Volver al inicio</a>
   <div class="plans-header">
     <p class="section-label">Nuestros Planes</p>
     <h2 class="section-title">VELOCIDAD REAL,<br>CONEXIÓN GARANTIZADA</h2>
@@ -1312,7 +1471,8 @@
 </section>
 
 <!-- WHY US -->
-<section id="nosotros" style="background:#040d2e;">
+<section id="nosotros" class="app-section" style="background:#040d2e;">
+  <a class="section-back" href="#inicio" onclick="showSection('inicio');return false;">← Volver al inicio</a>
   <p class="section-label">¿Por qué elegirnos?</p>
   <h2 class="section-title">CONECTAMOS AL<br>CAMPO HUILENSE</h2>
   <p class="section-desc">
@@ -1346,9 +1506,9 @@
 <!-- COVERAGE -->
 
   <!-- ——— SECCIÓN DE SPEEDTEST (DISEÑO ASIMÉTRICO: TEST IZQUIERDA + RECOMENDACIONES DERECHA) ——— -->
-  <section class="coverage-section" id="speedtest" style="padding: 80px 0;">
+  <section class="coverage-section app-section" id="speedtest" style="padding: 80px 0;">
     <div class="container" style="max-width: 1100px; margin: 0 auto; width: 100%;">
-      
+      <a class="section-back" href="#inicio" onclick="showSection('inicio');return false;">← Volver al inicio</a>
       <p class="section-label">Herramientas de Red</p>
       <h2 class="section-title">REVISA TU CONEXIÓN</h2>
       
@@ -1414,7 +1574,8 @@
     </div>
   </section>
 
-  <section class="coverage-section" id="cobertura">
+  <section class="coverage-section app-section" id="cobertura">
+  <a class="section-back" href="#inicio" onclick="showSection('inicio');return false;">← Volver al inicio</a>
   <div class="coverage-content">
     <div>
       <p class="section-label">Área de Cobertura</p>
@@ -1462,7 +1623,8 @@
 </section>
 
 <!-- CONTACT -->
-<section class="contact-section" id="contacto">
+<section class="contact-section app-section" id="contacto">
+  <a class="section-back" href="#inicio" onclick="showSection('inicio');return false;">← Volver al inicio</a>
   <p class="section-label">Contáctanos</p>
   <h2 class="section-title">ESTAMOS PARA<br>SERVIRTE</h2>
   <p class="section-desc">
@@ -1637,7 +1799,8 @@ function enviarWhatsApp() {
 
 <!-- FOOTER -->
 <!-- GESTIÓN CLIENTE -->
-<section class="gestion-section" id="gestion">
+<section class="gestion-section app-section" id="gestion">
+  <a class="section-back" href="#inicio" onclick="showSection('inicio');return false;">← Volver al inicio</a>
   <div class="gestion-header">
     <p class="section-label">Portal de Clientes</p>
     <h2 class="section-title">GESTIÓN DEL<br>CLIENTE</h2>
@@ -1695,12 +1858,12 @@ function enviarWhatsApp() {
       </div>
     </div>
     <ul class="footer-links">
-      <li><a href="#planes">Planes</a></li>
-      <li><a href="#speedtest">Test de Velocidad</a></li>
-        <li><a href="#cobertura">Cobertura</a></li>
-      <li><a href="#nosotros">Nosotros</a></li>
-      <li><a href="#contacto">Contacto</a></li>
-      <li><a href="#gestion">Gestión Cliente</a></li>
+      <li><a href="#planes" onclick="showSection('planes');return false;">Planes</a></li>
+      <li><a href="#speedtest" onclick="showSection('speedtest');return false;">Test de Velocidad</a></li>
+        <li><a href="#cobertura" onclick="showSection('cobertura');return false;">Cobertura</a></li>
+      <li><a href="#nosotros" onclick="showSection('nosotros');return false;">Nosotros</a></li>
+      <li><a href="#contacto" onclick="showSection('contacto');return false;">Contacto</a></li>
+      <li><a href="#gestion" onclick="showSection('gestion');return false;">Gestión Cliente</a></li>
       <li><a href="mailto:mc2025comunicaciones@gmail.com">mc2025comunicaciones@gmail.com</a></li>
     </ul>
   </div>
@@ -1713,9 +1876,40 @@ function enviarWhatsApp() {
   // MÉTODO DIRECTO A LA BASE DE DATOS SIN DEPENDER DE APPS SCRIPT (CORS BYPASS)
   const SPREADSHEET_ID = '1UsNouaSVr7fUzufxnBorAna1JcUYQriyGELLpyY9YIQ';
 
+  const DASH_SECTIONS = ['inicio', 'planes', 'speedtest', 'cobertura', 'nosotros', 'contacto', 'gestion'];
+
+  function showSection(id) {
+    if (DASH_SECTIONS.indexOf(id) === -1) id = 'inicio';
+
+    DASH_SECTIONS.forEach(sec => {
+      const el = document.getElementById(sec);
+      if (el) el.classList.toggle('active', sec === id);
+    });
+
+    document.querySelectorAll('.nav-links a[data-section]').forEach(a => {
+      a.classList.toggle('nav-active', a.getAttribute('data-section') === id);
+    });
+
+    window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+
+    if (history.replaceState) {
+      history.replaceState(null, '', '#' + id);
+    } else {
+      window.location.hash = id;
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     const input = document.getElementById('cedulaInput');
     if (input) input.addEventListener('keypress', e => { if (e.key === 'Enter') buscarCliente(); });
+
+    const initial = window.location.hash ? window.location.hash.replace('#', '') : 'inicio';
+    showSection(initial);
+  });
+
+  window.addEventListener('hashchange', () => {
+    const current = window.location.hash ? window.location.hash.replace('#', '') : 'inicio';
+    showSection(current);
   });
 
   function buscarCliente() {
