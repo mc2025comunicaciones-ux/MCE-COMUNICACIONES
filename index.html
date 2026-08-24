@@ -76,7 +76,7 @@
   .nav-links {
     display: flex;
     align-items: center;
-    gap: 1.8rem;
+    gap: 1.5rem;
     list-style: none;
   }
 
@@ -88,6 +88,7 @@
     font-weight: 500;
     letter-spacing: 1.5px;
     text-transform: uppercase;
+    white-space: nowrap;
     transition: color 0.2s;
   }
 
@@ -138,8 +139,10 @@
   /* ——— HERO ——— */
   .hero {
     min-height: 100vh;
-    display: flex;
-    align-items: center;
+    display: grid;
+    grid-template-columns: 1fr;
+    align-content: center;
+    row-gap: 48px;
     position: relative;
     padding: 120px 5% 80px;
     overflow: hidden;
@@ -1338,7 +1341,7 @@
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 20px;
     max-width: 1100px;
-    margin: 56px auto 0;
+    margin: 0 auto;
   }
 
   .dash-card {
@@ -1423,7 +1426,7 @@
   }
 
   /* ——— RESPONSIVE ——— */
-  @media (max-width: 900px) {
+  @media (max-width: 1480px) {
     .hero-visual, .signal-rings { display: none; }
     .coverage-content { grid-template-columns: 1fr; }
 
