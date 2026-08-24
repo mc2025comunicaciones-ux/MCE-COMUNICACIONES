@@ -2585,12 +2585,27 @@ function enviarWhatsApp() {
     },
     {
       id: 'sin_senal',
-      keywords: ['no tengo internet', 'sin internet', 'no funciona', 'sin senal', 'se cayo', 'no anda', 'no sirve', 'esta caido', 'router apagado', 'no hay internet'],
+      keywords: [
+        'no tengo internet', 'sin internet', 'no funciona', 'sin senal', 'se cayo', 'no anda', 'no sirve',
+        'esta caido', 'router apagado', 'no hay internet', 'no me agarra el wifi', 'no agarra el wifi',
+        'no coge el wifi', 'no coge señal', 'no pega el wifi', 'no jala el internet', 'no jala el wifi',
+        'no prende el internet', 'no prende el wifi', 'no carga nada', 'no conecta', 'no me conecta',
+        'no puedo conectarme', 'perdi la conexion', 'perdi el internet', 'se me fue el internet',
+        'se me fue el wifi', 'quede sin internet', 'quede sin wifi', 'el wifi no sirve', 'el internet no sirve',
+        'no hay wifi', 'no tengo wifi', 'no hay señal', 'no tengo señal', 'no navega', 'no abre nada',
+        'no carga ninguna pagina', 'internet muerto', 'wifi muerto', 'se me daño el internet',
+        'se me daño el wifi', 'no me deja entrar a internet', 'estoy sin servicio', 'no tengo servicio'
+      ],
       respuesta: 'Prueba esto primero: 1) revisa que el router tenga luces encendidas, 2) desconéctalo, espera 30 segundos y vuelve a conectarlo, 3) espera 2-3 minutos. Si sigue igual, revisa la <a href="#ayuda" onclick="showSection(\'ayuda\');toggleAssistant(false);return false;">Guía de Soporte</a> completa o repórtalo por WhatsApp.'
     },
     {
       id: 'lento',
-      keywords: ['lento', 'lenta', 'lag', 'tarda', 'no carga', 'va mal', 'trabado'],
+      keywords: [
+        'lento', 'lenta', 'lag', 'tarda', 'no carga', 'va mal', 'trabado', 'esta pesado', 'muy pesado',
+        'no carga rapido', 'va muy lento', 'internet lento', 'wifi lento', 'esta lento el internet',
+        'esta lenta la internet', 'no carga bien', 'demora mucho', 'se demora mucho', 'va como caminando',
+        'esta como tortuga'
+      ],
       respuesta: 'Reinicia el router y revisa cuántos dispositivos están conectados al tiempo (muchos a la vez bajan la velocidad). Puedes medir tu velocidad real en <a href="#speedtest" onclick="showSection(\'speedtest\');toggleAssistant(false);return false;">Test de Velocidad</a>.'
     },
     {
@@ -2785,7 +2800,24 @@ function enviarWhatsApp() {
       });
       if (puntaje > mejorPuntaje) { mejorPuntaje = puntaje; mejor = entrada; }
     });
-    return mejor;
+    if (mejor) return mejor;
+    // Red de seguridad: si ninguna frase exacta coincidió, pero el mensaje
+    // combina una palabra de "internet/wifi/señal" con una palabra de
+    // "problema", igual lo entendemos como una falla de conexión — así
+    // frases nuevas que no anticipamos (ej. "no me agarra el wifi") también
+    // reciben ayuda en vez de la respuesta genérica de "no entendí".
+    return heuristicaProblemaConexion(texto);
+  }
+
+  const PALABRAS_CONEXION = ['wifi', 'internet', 'senal', 'conexion', 'red', 'router', 'modem'];
+  const PALABRAS_PROBLEMA = ['no', 'sin', 'mal', 'mala', 'malo', 'pesimo', 'fallo', 'falla', 'daño', 'dano', 'murio', 'muerto'];
+  function heuristicaProblemaConexion(texto) {
+    const mencionaConexion = PALABRAS_CONEXION.some(p => new RegExp('\\b' + p).test(texto));
+    const mencionaProblema = PALABRAS_PROBLEMA.some(p => new RegExp('\\b' + p + '\\b').test(texto));
+    if (mencionaConexion && mencionaProblema) {
+      return BASE_CONOCIMIENTO_ASISTENTE.find(e => e.id === 'sin_senal') || null;
+    }
+    return null;
   }
 
   /* Obtiene la respuesta a mostrar (siempre como Promise, aunque la mayoría
