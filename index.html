@@ -1230,35 +1230,56 @@
   .avisos-bar { display: none; }
   .avisos-bar.visible {
     display: block;
-    margin-top: 70px;
+    margin-top: 86px;
     position: relative;
     z-index: 90;
-    padding: 12px 5%;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: 0 5%;
+    animation: fadeUp 0.4s ease both;
   }
-  .avisos-bar.tipo-mantenimiento { background: linear-gradient(90deg, rgba(37,99,235,0.28), rgba(59,130,246,0.14)); }
-  .avisos-bar.tipo-falla { background: linear-gradient(90deg, rgba(239,68,68,0.28), rgba(239,68,68,0.12)); }
-  .avisos-bar.tipo-info { background: linear-gradient(90deg, rgba(148,163,184,0.22), rgba(148,163,184,0.1)); }
   .avisos-bar-inner {
     max-width: 1100px; margin: 0 auto;
-    display: flex; align-items: center; gap: 14px;
+    display: flex; align-items: center; gap: 16px;
+    background: rgba(10, 16, 48, 0.92);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-left: 4px solid var(--aviso-color, var(--blue-electric));
+    border-radius: 14px;
+    padding: 16px 18px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    backdrop-filter: blur(6px);
   }
-  .avisos-bar-icon { font-size: 1.4rem; flex-shrink: 0; }
+  .avisos-bar.tipo-mantenimiento .avisos-bar-inner { --aviso-color: #3b82f6; }
+  .avisos-bar.tipo-falla .avisos-bar-inner { --aviso-color: #ef4444; }
+  .avisos-bar.tipo-info .avisos-bar-inner { --aviso-color: #94a3b8; }
+  .avisos-bar-icon {
+    width: 42px; height: 42px; flex-shrink: 0; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem;
+  }
+  .avisos-bar.tipo-mantenimiento .avisos-bar-icon { background: rgba(59,130,246,0.2); border: 1px solid rgba(59,130,246,0.45); }
+  .avisos-bar.tipo-falla .avisos-bar-icon { background: rgba(239,68,68,0.2); border: 1px solid rgba(239,68,68,0.45); }
+  .avisos-bar.tipo-info .avisos-bar-icon { background: rgba(148,163,184,0.2); border: 1px solid rgba(148,163,184,0.45); }
   .avisos-bar-text { flex: 1; min-width: 0; }
-  .avisos-bar-title { font-size: 0.88rem; font-weight: 700; color: var(--white); margin-bottom: 2px; }
-  .avisos-bar-msg { font-size: 0.82rem; color: rgba(255,255,255,0.75); line-height: 1.4; }
+  .avisos-bar-tag {
+    display: inline-block; font-size: 0.66rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase;
+    color: var(--aviso-color, var(--blue-electric)); margin-bottom: 4px;
+  }
+  .avisos-bar-title { font-size: 0.94rem; font-weight: 700; color: var(--white); margin-bottom: 3px; line-height: 1.35; }
+  .avisos-bar-msg { font-size: 0.84rem; color: rgba(255,255,255,0.72); line-height: 1.5; }
   .avisos-bar-msg strong { color: var(--blue-light); }
   .avisos-bar-close {
-    background: rgba(255,255,255,0.12); border: none; color: var(--white);
-    width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0; cursor: pointer;
-    display: flex; align-items: center; justify-content: center; font-size: 0.9rem;
-    transition: background 0.2s;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); color: rgba(255,255,255,0.8);
+    width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: 0.95rem;
+    transition: background 0.2s, color 0.2s;
+    align-self: flex-start;
   }
-  .avisos-bar-close:hover { background: rgba(255,255,255,0.25); }
+  .avisos-bar-close:hover { background: rgba(255,255,255,0.18); color: var(--white); }
   @media (max-width: 640px) {
-    .avisos-bar-inner { align-items: flex-start; }
-    .avisos-bar-title { font-size: 0.82rem; }
-    .avisos-bar-msg { font-size: 0.78rem; }
+    .avisos-bar.visible { margin-top: 78px; }
+    .avisos-bar-inner { align-items: flex-start; padding: 14px; gap: 12px; }
+    .avisos-bar-icon { width: 36px; height: 36px; font-size: 1.1rem; }
+    .avisos-bar-title { font-size: 0.86rem; }
+    .avisos-bar-msg { font-size: 0.8rem; }
   }
 
   /* ——— Asistente Virtual (chat local, sin costo de API) ——— */
@@ -2849,9 +2870,28 @@ function enviarWhatsApp() {
   }
 
   function estiloTipoAviso(tipo) {
-    if (tipo === 'falla') return { clase: 'tipo-falla', icono: '⚠️' };
-    if (tipo === 'mantenimiento') return { clase: 'tipo-mantenimiento', icono: '🔧' };
-    return { clase: 'tipo-info', icono: 'ℹ️' };
+    if (tipo === 'falla') return { clase: 'tipo-falla', icono: '⚠️', etiqueta: 'Falla en el servicio' };
+    if (tipo === 'mantenimiento') return { clase: 'tipo-mantenimiento', icono: '🔧', etiqueta: 'Mantenimiento programado' };
+    return { clase: 'tipo-info', icono: 'ℹ️', etiqueta: 'Aviso' };
+  }
+
+  /* Las fechas pueden llegar en formato ISO normal (si Sheets las guardó como
+     texto) o en el formato especial de Google "Date(año,mes,día)" (si Sheets
+     las auto-convirtió en una fecha real). Esta función entiende ambos casos
+     y siempre devuelve "YYYY-MM-DD" para poder comparar correctamente. */
+  function normalizarFechaAviso(celda) {
+    if (!celda) return '';
+    const crudo = celda.v;
+    if (typeof crudo === 'string') {
+      const m = crudo.match(/^Date\((\d+),(\d+),(\d+)/);
+      if (m) {
+        const y = m[1], mo = String(Number(m[2]) + 1).padStart(2, '0'), d = String(Number(m[3])).padStart(2, '0');
+        return `${y}-${mo}-${d}`;
+      }
+    }
+    const texto = String(crudo != null ? crudo : (celda.f || '')).trim();
+    if (/^\d{4}-\d{2}-\d{2}/.test(texto)) return texto.slice(0, 10);
+    return texto;
   }
 
   function cargarAvisosVigentes() {
@@ -2873,7 +2913,7 @@ function enviarWhatsApp() {
           const val = i => (c[i] ? (c[i].f || c[i].v) : '');
           return {
             id: val(0), titulo: val(1), mensaje: val(2), tipo: val(3) || 'info',
-            zona: val(4), fechaInicio: val(5), fechaFin: val(6), activo: val(7)
+            zona: val(4), fechaInicio: normalizarFechaAviso(c[5]), fechaFin: normalizarFechaAviso(c[6]), activo: val(7)
           };
         }).filter(Boolean).filter(avisoPublicoEsVigente);
 
@@ -2884,34 +2924,28 @@ function enviarWhatsApp() {
         avisos.sort((a, b) => (peso[b.tipo] || 0) - (peso[a.tipo] || 0) || String(b.fechaInicio).localeCompare(String(a.fechaInicio)));
         const aviso = avisos[0];
 
-        // Si el cliente ya cerró este mismo aviso en esta sesión, no se lo volvemos a mostrar
-        let cerrados = [];
-        try { cerrados = JSON.parse(sessionStorage.getItem('mce_avisos_cerrados') || '[]'); } catch (e) {}
-        if (cerrados.indexOf(aviso.id) !== -1) return;
-
         const est = estiloTipoAviso(aviso.tipo);
         barra.className = 'avisos-bar visible ' + est.clase;
         barra.innerHTML = `
           <div class="avisos-bar-inner">
             <div class="avisos-bar-icon">${est.icono}</div>
             <div class="avisos-bar-text">
-              <div class="avisos-bar-title">${aviso.titulo}${aviso.zona ? ' — <strong>' + aviso.zona + '</strong>' : ''}</div>
+              <div class="avisos-bar-tag">${est.etiqueta}${aviso.zona ? ' · ' + aviso.zona : ''}</div>
+              <div class="avisos-bar-title">${aviso.titulo}</div>
               <div class="avisos-bar-msg">${aviso.mensaje}</div>
             </div>
-            <button type="button" class="avisos-bar-close" onclick="cerrarAvisoBar('${String(aviso.id).replace(/'/g, "\\'")}')" aria-label="Cerrar aviso">✕</button>
+            <button type="button" class="avisos-bar-close" onclick="cerrarAvisoBar()" aria-label="Cerrar aviso">✕</button>
           </div>`;
       })
       .catch(() => { /* si la pestaña "Avisos" aún no existe, simplemente no se muestra nada */ });
   }
 
-  function cerrarAvisoBar(id) {
+  /* Cerrar el aviso solo lo oculta mientras el cliente sigue viendo esta
+     misma página cargada. Si recarga o vuelve a entrar, el aviso reaparece
+     de nuevo mientras siga vigente (a propósito: así nadie se lo pierde). */
+  function cerrarAvisoBar() {
     const barra = document.getElementById('avisosBar');
     if (barra) { barra.className = 'avisos-bar'; barra.innerHTML = ''; }
-    try {
-      const cerrados = JSON.parse(sessionStorage.getItem('mce_avisos_cerrados') || '[]');
-      if (cerrados.indexOf(id) === -1) cerrados.push(id);
-      sessionStorage.setItem('mce_avisos_cerrados', JSON.stringify(cerrados));
-    } catch (e) { /* se ignora si sessionStorage no está disponible */ }
   }
 
   function closeMobileMenu() {
