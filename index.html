@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MCE COMUNICACIONES - Internet De Calidad</title>
+<title>MCE COMUNICACIONES - Internet Dedicado</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -1182,13 +1182,145 @@
   .faq-question .faq-icon { flex-shrink: 0; font-size: 1.3rem; color: var(--blue-electric); transition: transform 0.25s; }
   .faq-item.open .faq-question .faq-icon { transform: rotate(45deg); }
   .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease; }
-  .faq-item.open .faq-answer { max-height: 400px; }
   .faq-answer p { padding: 0 22px 20px; font-size: 0.9rem; line-height: 1.6; color: rgba(255,255,255,0.65); }
+  .faq-item.open .faq-answer { max-height: 640px; }
+  .faq-answer ol {
+    margin: 0; padding: 0 22px 20px 44px; display: flex; flex-direction: column; gap: 10px;
+  }
+  .faq-answer ol li { font-size: 0.9rem; line-height: 1.55; color: rgba(255,255,255,0.7); }
+  .faq-answer ol li::marker { color: var(--blue-electric); font-weight: 700; }
+  .faq-answer .faq-tip {
+    margin: 0 22px 18px; padding: 10px 14px; border-radius: 8px;
+    background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.25);
+    font-size: 0.82rem; line-height: 1.5; color: #fcd34d;
+  }
+  .faq-section-title {
+    text-align: center; font-family: 'Barlow Condensed', sans-serif; font-size: 1rem;
+    font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--white);
+    margin: 56px 0 18px;
+  }
+  .faq-list + .faq-section-title { margin-top: 56px; }
   .faq-cta {
     max-width: 780px; margin: 40px auto 0; text-align: center; padding: 26px;
     background: rgba(37,99,235,0.1); border: 1px solid rgba(59,130,246,0.3); border-radius: 16px;
   }
   .faq-cta p { font-size: 0.92rem; color: rgba(255,255,255,0.7); margin-bottom: 14px; }
+
+  /* ——— Asistente Virtual (chat local, sin costo de API) ——— */
+  .assistant-toggle {
+    position: fixed;
+    bottom: 98px; right: 28px;
+    width: 58px; height: 58px;
+    background: linear-gradient(135deg, var(--blue-bright), var(--blue-electric));
+    border: none; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem; cursor: pointer;
+    box-shadow: 0 4px 20px rgba(37,99,235,0.55);
+    z-index: 201;
+    transition: transform 0.2s;
+    animation: bounceIn 1s ease 2.3s both;
+  }
+  .assistant-toggle:hover { transform: scale(1.1); }
+  .assistant-toggle .assistant-badge {
+    position: absolute; top: -3px; right: -3px;
+    width: 15px; height: 15px; border-radius: 50%;
+    background: #22c55e; border: 2px solid var(--dark-bg);
+  }
+
+  .assistant-panel {
+    position: fixed;
+    bottom: 168px; right: 28px;
+    width: 360px; max-width: calc(100vw - 40px);
+    height: 520px; max-height: calc(100vh - 200px);
+    background: #0a1030;
+    border: 1px solid rgba(59,130,246,0.35);
+    border-radius: 18px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    z-index: 201;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+    opacity: 0; transform: translateY(16px) scale(0.98);
+    pointer-events: none; visibility: hidden;
+    transition: opacity 0.22s, transform 0.22s, visibility 0.22s;
+  }
+  .assistant-panel.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; visibility: visible; }
+
+  .assistant-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 18px;
+    background: linear-gradient(135deg, rgba(37,99,235,0.35), rgba(59,130,246,0.12));
+    border-bottom: 1px solid rgba(59,130,246,0.25);
+    flex-shrink: 0;
+  }
+  .assistant-header-info { display: flex; align-items: center; gap: 12px; }
+  .assistant-avatar {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center;
+    font-size: 1.15rem; flex-shrink: 0;
+  }
+  .assistant-title { font-family: 'Barlow Condensed', sans-serif; font-size: 1.02rem; font-weight: 700; color: var(--white); letter-spacing: 0.5px; }
+  .assistant-subtitle { display: flex; align-items: center; gap: 5px; font-size: 0.72rem; color: rgba(255,255,255,0.55); margin-top: 2px; }
+  .assistant-dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 5px #22c55e; }
+  .assistant-close {
+    background: none; border: none; color: rgba(255,255,255,0.6); font-size: 1.1rem;
+    cursor: pointer; width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; transition: background 0.2s, color 0.2s;
+  }
+  .assistant-close:hover { background: rgba(255,255,255,0.08); color: var(--white); }
+
+  .assistant-messages {
+    flex: 1; overflow-y: auto; padding: 16px 14px; display: flex; flex-direction: column; gap: 10px;
+  }
+  .assistant-msg { max-width: 86%; padding: 10px 14px; border-radius: 14px; font-size: 0.86rem; line-height: 1.5; }
+  .assistant-msg a { color: var(--blue-electric); text-decoration: underline; }
+  .assistant-msg.bot {
+    align-self: flex-start; background: rgba(255,255,255,0.06); border: 1px solid rgba(59,130,246,0.18);
+    color: rgba(255,255,255,0.85); border-bottom-left-radius: 4px;
+  }
+  .assistant-msg.user {
+    align-self: flex-end; background: var(--blue-bright); color: var(--white); border-bottom-right-radius: 4px;
+  }
+  .assistant-typing { align-self: flex-start; display: flex; gap: 4px; padding: 12px 14px; }
+  .assistant-typing span {
+    width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.5);
+    animation: assistantTyping 1.1s infinite ease-in-out;
+  }
+  .assistant-typing span:nth-child(2) { animation-delay: 0.15s; }
+  .assistant-typing span:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes assistantTyping { 0%, 60%, 100% { opacity: 0.3; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-3px); } }
+
+  .assistant-quick { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 14px 12px; flex-shrink: 0; }
+  .assistant-chip {
+    background: rgba(59,130,246,0.12); border: 1px solid rgba(59,130,246,0.3); color: var(--blue-light);
+    font-size: 0.76rem; font-weight: 600; padding: 7px 12px; border-radius: 50px; cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+  .assistant-chip:hover { background: rgba(59,130,246,0.25); color: var(--white); }
+
+  .assistant-input-row {
+    display: flex; gap: 8px; padding: 12px 14px; border-top: 1px solid rgba(59,130,246,0.18); flex-shrink: 0;
+  }
+  .assistant-input {
+    flex: 1; background: rgba(255,255,255,0.06); border: 1px solid rgba(59,130,246,0.25);
+    border-radius: 10px; padding: 11px 14px; color: var(--white); font-family: 'Barlow', sans-serif;
+    font-size: 0.86rem; outline: none;
+  }
+  .assistant-input:focus { border-color: var(--blue-electric); }
+  .assistant-input::placeholder { color: rgba(255,255,255,0.3); }
+  .assistant-send {
+    width: 42px; height: 42px; flex-shrink: 0; background: var(--blue-bright); border: none; border-radius: 10px;
+    color: var(--white); font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .assistant-send:hover { background: var(--blue-mid); }
+
+  @media (max-width: 460px) {
+    .assistant-toggle { bottom: 92px; right: 18px; }
+    .assistant-panel {
+      bottom: 0; right: 0; left: 0; width: auto; max-width: none;
+      height: 78vh; max-height: none; border-radius: 18px 18px 0 0;
+    }
+  }
 
   /* ——— FOOTER ——— */
   footer {
@@ -1503,6 +1635,30 @@
 <!-- WhatsApp Float -->
 <a href="https://wa.me/573241100037" class="whatsapp-float" title="Escríbenos por WhatsApp" aria-label="WhatsApp">💬</a>
 
+<!-- Asistente Virtual (responde con el contenido de la página, sin costo) -->
+<button type="button" class="assistant-toggle" id="assistantToggle" onclick="toggleAssistant()" aria-label="Abrir asistente virtual" title="Asistente Virtual MCE">
+  🤖<span class="assistant-badge"></span>
+</button>
+
+<div class="assistant-panel" id="assistantPanel">
+  <div class="assistant-header">
+    <div class="assistant-header-info">
+      <div class="assistant-avatar">🤖</div>
+      <div>
+        <div class="assistant-title">Asistente Virtual MCE</div>
+        <div class="assistant-subtitle"><span class="assistant-dot"></span> Responde al instante</div>
+      </div>
+    </div>
+    <button type="button" class="assistant-close" onclick="toggleAssistant(false)" aria-label="Cerrar asistente">✕</button>
+  </div>
+  <div class="assistant-messages" id="assistantMessages"></div>
+  <div class="assistant-quick" id="assistantQuick"></div>
+  <div class="assistant-input-row">
+    <input type="text" id="assistantInput" class="assistant-input" placeholder="Escribe tu pregunta..." autocomplete="off">
+    <button type="button" class="assistant-send" onclick="enviarPreguntaAsistente()" aria-label="Enviar pregunta">➤</button>
+  </div>
+</div>
+
 <!-- NAV -->
 <nav>
   <div class="nav-logo">
@@ -1535,10 +1691,10 @@
       <span>MCE</span>
       <span>COMUNICACIONES</span>
     </h1>
-    <p class="hero-sub">Internet De Calidad</p>
+    <p class="hero-sub">Internet Dedicado de Calidad</p>
     <p class="hero-desc">
       Llevamos conectividad real a las zonas rurales de Saladoblanco y Oporapa.
-      Megas de calidad, sin compartir, con la estabilidad que tu hogar y negocio necesitan.
+      Megas dedicadas, sin compartir, con la estabilidad que tu hogar y negocio necesitan.
     </p>
     <div class="hero-actions">
       <a href="#planes" class="btn-primary" onclick="showSection('planes');return false;">Ver Planes ↓</a>
@@ -1549,7 +1705,7 @@
     <a class="dash-card" href="#planes" onclick="showSection('planes');return false;">
       <div class="dash-card-icon">📶</div>
       <div class="dash-card-title">Planes</div>
-      <div class="dash-card-desc">Conoce las velocidades y precios de Internet De Calidad.</div>
+      <div class="dash-card-desc">Conoce las velocidades y precios de Internet Dedicado.</div>
     </a>
     <a class="dash-card" href="#speedtest" onclick="showSection('speedtest');return false;">
       <div class="dash-card-icon">⚡</div>
@@ -1574,7 +1730,7 @@
     <a class="dash-card" href="#ayuda" onclick="showSection('ayuda');return false;">
       <div class="dash-card-icon">❓</div>
       <div class="dash-card-title">Centro de Ayuda</div>
-      <div class="dash-card-desc">Respuestas rápidas sobre pagos, instalación, fallas y más.</div>
+      <div class="dash-card-desc">Guía de solución de fallas paso a paso y respuestas rápidas a tus dudas.</div>
     </a>
     <a class="dash-card" href="#gestion" onclick="showSection('gestion');return false;">
       <div class="dash-card-icon">👤</div>
@@ -1604,7 +1760,7 @@
   </div>
   <div class="coverage-item">
     <span class="coverage-icon">⚡</span>
-    Megas De Calidad
+    Megas Dedicadas
   </div>
 </div>
 
@@ -1624,7 +1780,7 @@
     <div class="plan-card">
       <div class="plan-speed">8</div>
       <div class="plan-unit">MBPS</div>
-      <div class="plan-type">Megas De Calidad</div>
+      <div class="plan-type">Megas Dedicadas</div>
       <ul class="plan-features">
         <li>Velocidad exclusiva garantizada</li>
         <li>Ideal para hogar y trabajo remoto</li>
@@ -1640,7 +1796,7 @@
       <div class="plan-badge">⭐ Más Popular</div>
       <div class="plan-speed">12</div>
       <div class="plan-unit">MBPS</div>
-      <div class="plan-type">Megas De Calidad</div>
+      <div class="plan-type">Megas Dedicadas</div>
       <ul class="plan-features">
         <li>Máximo rendimiento</li>
         <li>Ideal para negocios y múltiples usuarios</li>
@@ -1707,7 +1863,7 @@
     </div>
     <div class="why-card">
       <div class="why-icon">⚡</div>
-      <div class="why-title">Megas De Calidad</div>
+      <div class="why-title">Megas Dedicadas</div>
       <p class="why-desc">Tu ancho de banda es exclusivamente tuyo. Sin compartir tu velocidad.</p>
     </div>
     <div class="why-card">
@@ -1838,15 +1994,99 @@
   </div>
 </section>
 
-<!-- CENTRO DE AYUDA (FAQ) -->
+<!-- CENTRO DE AYUDA (Guía de Soporte + FAQ) -->
 <section class="app-section" id="ayuda" style="background:#040d2e;">
   <a class="section-back" href="#inicio" onclick="showSection('inicio');return false;">← Volver al inicio</a>
   <p class="section-label" style="text-align:center;">Centro de Ayuda</p>
-  <h2 class="section-title" style="text-align:center;">PREGUNTAS<br>FRECUENTES</h2>
-  <p class="section-desc" style="margin: 0 auto 40px; text-align: center;">
-    Antes de escribirnos, revisa si tu duda ya está resuelta aquí. Si no, con gusto te atendemos por WhatsApp.
+  <h2 class="section-title" style="text-align:center;">RESUELVE TU DUDA<br>EN SEGUNDOS</h2>
+  <p class="section-desc" style="margin: 0 auto 30px; text-align: center;">
+    Antes de escribirnos, prueba estos pasos rápidos o revisa las preguntas frecuentes. Si el problema sigue, con gusto te atendemos por WhatsApp.
   </p>
 
+  <p class="faq-section-title" style="margin-top:0;">🛠️ Guía Rápida de Solución de Problemas</p>
+  <div class="faq-list" id="soporteList">
+    <div class="faq-item">
+      <button class="faq-question" type="button" onclick="toggleFaq(this)">
+        <span>🔴 No tengo señal / el internet no funciona</span>
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-answer">
+        <ol>
+          <li>Revisa que el router tenga luces encendidas. Si está completamente apagado, verifica que esté conectado a la corriente y que no se haya ido la luz en tu casa.</li>
+          <li>Desconecta el router de la corriente, espera 30 segundos y vuelve a conectarlo.</li>
+          <li>Espera 2 a 3 minutos a que el router encienda por completo (las luces se estabilizan).</li>
+          <li>Prueba si el problema es solo de un dispositivo: revisa con el celular por wifi y luego con otro aparato.</li>
+          <li>Si después de esto sigue sin funcionar, escríbenos contándonos qué luces ves encendidas en el router.</li>
+        </ol>
+        <div class="faq-tip">💡 Tip: casi la mitad de los casos "sin internet" se resuelven solo con el paso 2 (desconectar y volver a conectar el router).</div>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" type="button" onclick="toggleFaq(this)">
+        <span>🐢 El internet está muy lento</span>
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-answer">
+        <ol>
+          <li>Reinicia el router: desconéctalo, espera 30 segundos y vuelve a conectarlo.</li>
+          <li>Revisa cuántos dispositivos están conectados al mismo tiempo (celulares, TV, cámaras). Muchos dispositivos a la vez bajan la velocidad que percibes.</li>
+          <li>Haz la prueba en la sección <a href="#speedtest" onclick="showSection('speedtest');return false;" style="color:var(--blue-electric);">Test de Velocidad</a> de esta página, si puedes conectado por cable.</li>
+          <li>Si el resultado es mucho menor al de tu plan contratado, escríbenos indicando el resultado del test.</li>
+        </ol>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" type="button" onclick="toggleFaq(this)">
+        <span>⚡ Se fue la luz o hubo tormenta y no tengo servicio</span>
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-answer">
+        <ol>
+          <li>Espera unos minutos después de que vuelva la energía: el router y los equipos de la red necesitan tiempo para reconectarse.</li>
+          <li>Verifica que el router tenga luces encendidas.</li>
+          <li>Si después de 15 a 20 minutos sigue sin señal, es posible que un equipo se haya dañado por la tormenta. Escríbenos.</li>
+        </ol>
+        <div class="faq-tip">💡 Tip: usar un regulador de voltaje o UPS pequeño para tu router lo protege de subidas de tensión y alarga su vida útil.</div>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" type="button" onclick="toggleFaq(this)">
+        <span>📡 La señal se corta a cada rato (intermitente)</span>
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-answer">
+        <ol>
+          <li>Revisa que el router no esté muy cerca de otros aparatos electrónicos, hornos microondas, o pegado a paredes muy gruesas.</li>
+          <li>Reinicia el router.</li>
+          <li>Anota a qué horas se corta. Ese dato nos ayuda mucho a identificar si es un problema de tu casa o de la red.</li>
+          <li>Escríbenos contándonos el patrón que notaste (por ejemplo, "se corta cada noche sobre las 8pm").</li>
+        </ol>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" type="button" onclick="toggleFaq(this)">
+        <span>🎥 Mis cámaras de seguridad se desconectaron</span>
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-answer">
+        <ol>
+          <li>Revisa que el router tenga señal normal (que otros dispositivos sí funcionen bien).</li>
+          <li>Reinicia primero el router. Si las cámaras no se reconectan solas, reinicia también la cámara desconectándola de la corriente unos segundos.</li>
+          <li>Revisa en la app de tus cámaras si aparece "sin conexión" o error de contraseña wifi.</li>
+          <li>Si el problema persiste, escríbenos.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <div class="faq-cta">
+    <p>¿Ya intentaste estos pasos y el problema sigue?</p>
+    <a href="https://wa.me/573241100037?text=Hola%20MCE%20Comunicaciones!%20Ya%20intent%C3%A9%20los%20pasos%20de%20la%20gu%C3%ADa%20de%20soporte%20y%20el%20problema%20sigue.%20Necesito%20ayuda." target="_blank" class="gestion-whatsapp-btn gestion-support-btn" style="max-width:340px; margin:0 auto;">
+      🛠️ Reportar Falla / Soporte
+    </a>
+  </div>
+
+  <p class="faq-section-title">❓ Preguntas Frecuentes</p>
   <div class="faq-list" id="faqList">
     <div class="faq-item">
       <button class="faq-question" type="button" onclick="toggleFaq(this)">
@@ -2177,12 +2417,16 @@ function enviarWhatsApp() {
 
   const DASH_SECTIONS = ['inicio', 'planes', 'speedtest', 'cobertura', 'nosotros', 'ayuda', 'contacto', 'gestion'];
 
-  /* Acordeón del Centro de Ayuda: abre/cierra una pregunta sin recargar la página */
+  /* Acordeón reutilizable (Centro de Ayuda, Guía de Soporte, etc.): abre/cierra
+     una pregunta o paso sin recargar la página. Cierra solo las demás dentro
+     de su misma lista (.faq-list), para que dos acordeones distintos en la
+     misma página no se interfieran entre sí. */
   function toggleFaq(btn) {
     const item = btn.closest('.faq-item');
-    if (!item) return;
+    const lista = btn.closest('.faq-list');
+    if (!item || !lista) return;
     const yaAbierto = item.classList.contains('open');
-    document.querySelectorAll('#faqList .faq-item.open').forEach(el => el.classList.remove('open'));
+    lista.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
     if (!yaAbierto) item.classList.add('open');
   }
 
@@ -2216,6 +2460,204 @@ function enviarWhatsApp() {
       document.body.removeChild(temp);
     }
   }
+
+  /* ===================== ASISTENTE VIRTUAL =====================
+     Chat local sin costo: no llama a ninguna IA externa. Compara la
+     pregunta del cliente contra una base de conocimiento armada con el
+     mismo contenido de esta página (planes, pagos, soporte, cobertura,
+     horarios, etc.) y responde con la coincidencia más relevante. Si no
+     encuentra nada, ofrece escalar directo a WhatsApp. */
+
+  const WA_NUMERO_ASISTENTE = '573241100037';
+
+  const BASE_CONOCIMIENTO_ASISTENTE = [
+    {
+      id: 'saludo',
+      keywords: ['hola', 'buenas', 'buenos dias', 'buenas tardes', 'buenas noches', 'hey', 'alo', 'aloo'],
+      respuesta: '¡Hola! 👋 Soy el asistente virtual de MCE Comunicaciones. Puedo ayudarte con pagos, tu estado de servicio, fallas, planes y cobertura. ¿En qué te ayudo?'
+    },
+    {
+      id: 'pagos',
+      keywords: ['pagar', 'pago', 'pagos', 'nequi', 'daviplata', 'factura', 'recibo', 'mensualidad', 'cuanto debo', 'como pago', 'transferencia', 'consignar'],
+      respuesta: 'Recibimos pagos por <strong>Nequi</strong> y <strong>Daviplata</strong> al número <strong>313 834 2442</strong>. No se recibe efectivo. Después de pagar, repórtalo desde <a href="#gestion" onclick="showSection(\'gestion\');toggleAssistant(false);return false;">Gestión Cliente</a> o envíanos el comprobante por WhatsApp.'
+    },
+    {
+      id: 'estado',
+      keywords: ['estado', 'vencimiento', 'vence', 'suspendido', 'suspension', 'activo', 'dias', 'cedula', 'consultar', 'al dia', 'mi cuenta', 'mi servicio'],
+      respuesta: 'Para ver tu plan, tu estado (al día, por vencer o suspendido) y tu historial de pagos, entra a <a href="#gestion" onclick="showSection(\'gestion\');toggleAssistant(false);return false;">Gestión Cliente</a> e ingresa tu número de cédula. Te muestra todo en segundos.'
+    },
+    {
+      id: 'planes',
+      keywords: ['plan', 'planes', 'precio', 'precios', 'megas', 'mbps', 'velocidad', 'cuanto cuesta', 'contratar', 'tarifa', 'valor del plan'],
+      respuesta: 'Tenemos planes de Internet Dedicado desde 8 hasta 20 Mbps, según lo que necesites (hogar, negocio, cámaras, trabajo remoto). Puedes verlos en <a href="#planes" onclick="showSection(\'planes\');toggleAssistant(false);return false;">Nuestros Planes</a>. Los precios exactos por zona te los confirmamos por WhatsApp.'
+    },
+    {
+      id: 'sin_senal',
+      keywords: ['no tengo internet', 'sin internet', 'no funciona', 'sin senal', 'se cayo', 'no anda', 'no sirve', 'esta caido', 'router apagado', 'no hay internet'],
+      respuesta: 'Prueba esto primero: 1) revisa que el router tenga luces encendidas, 2) desconéctalo, espera 30 segundos y vuelve a conectarlo, 3) espera 2-3 minutos. Si sigue igual, revisa la <a href="#ayuda" onclick="showSection(\'ayuda\');toggleAssistant(false);return false;">Guía de Soporte</a> completa o repórtalo por WhatsApp.'
+    },
+    {
+      id: 'lento',
+      keywords: ['lento', 'lenta', 'lag', 'tarda', 'no carga', 'va mal', 'trabado'],
+      respuesta: 'Reinicia el router y revisa cuántos dispositivos están conectados al tiempo (muchos a la vez bajan la velocidad). Puedes medir tu velocidad real en <a href="#speedtest" onclick="showSection(\'speedtest\');toggleAssistant(false);return false;">Test de Velocidad</a>.'
+    },
+    {
+      id: 'camaras',
+      keywords: ['camara', 'camaras', 'seguridad', 'cctv'],
+      respuesta: 'Si tus cámaras se desconectaron: reinicia primero el router, y si no vuelven solas, reinicia también la cámara desconectándola de la corriente unos segundos. Más detalle en la <a href="#ayuda" onclick="showSection(\'ayuda\');toggleAssistant(false);return false;">Guía de Soporte</a>.'
+    },
+    {
+      id: 'cobertura',
+      keywords: ['cobertura', 'vereda', 'instalan', 'instalacion', 'llegan', 'zona', 'sitio', 'municipio', 'tienen servicio'],
+      respuesta: 'Tenemos cobertura en zonas rurales de <strong>Saladoblanco</strong> y <strong>Oporapa</strong>, Huila, y seguimos ampliando. Escríbenos con tu vereda exacta por WhatsApp y te confirmamos disponibilidad. Mira el mapa en <a href="#cobertura" onclick="showSection(\'cobertura\');toggleAssistant(false);return false;">Cobertura</a>.'
+    },
+    {
+      id: 'horarios',
+      keywords: ['horario', 'horarios', 'atienden', 'abren', 'cierran', 'que hora'],
+      respuesta: 'Nuestro horario de atención es: Lunes a Viernes 8:30 AM - 5:30 PM, Sábados 8:00 AM - 2:00 PM. Domingos cerrado. Fuera de ese horario igual puedes escribirnos por WhatsApp y te respondemos apenas podamos.'
+    },
+    {
+      id: 'asesor',
+      keywords: ['asesor', 'humano', 'persona', 'hablar con alguien', 'agente', 'representante'],
+      respuesta: 'Con gusto te comunico con un asesor. Dale clic al botón de abajo para escribirnos directo por WhatsApp. 👇'
+    },
+    {
+      id: 'cancelar',
+      keywords: ['cancelar', 'suspender', 'dar de baja', 'terminar contrato', 'retirar el servicio'],
+      respuesta: 'Sin problema. Escríbenos por WhatsApp indicando tu nombre, cédula y el motivo, y te guiamos con el proceso de cancelación o suspensión temporal.'
+    },
+    {
+      id: 'contrato',
+      keywords: ['contrato', 'permanencia', 'clausula', 'multa'],
+      respuesta: 'Las condiciones exactas de permanencia dependen de tu plan. Escríbenos por WhatsApp con tu caso puntual y te las aclaramos sin problema.'
+    },
+    {
+      id: 'instalacion_tiempo',
+      keywords: ['cuanto tarda', 'tiempo de instalacion', 'cuando instalan', 'demora'],
+      respuesta: 'El tiempo depende de la disponibilidad en tu zona y del punto de conexión más cercano. En general coordinamos la visita técnica en pocos días tras confirmar tu solicitud.'
+    },
+    {
+      id: 'gracias',
+      keywords: ['gracias', 'muchas gracias', 'listo', 'ok gracias', 'vale gracias'],
+      respuesta: '¡Con gusto! Si te surge otra duda, aquí estoy. También puedes escribirnos por WhatsApp cuando quieras. 🙌'
+    }
+  ];
+
+  const RESPUESTA_FALLBACK_ASISTENTE = 'No estoy seguro de haber entendido bien tu pregunta 🤔. Puedes intentar con otras palabras, revisar el <a href="#ayuda" onclick="showSection(\'ayuda\');toggleAssistant(false);return false;">Centro de Ayuda</a>, o hablar directo con un asesor por WhatsApp. 👇';
+
+  /* Quita tildes/mayúsculas y dejar solo letras/números/espacios, para comparar sin importar acentos */
+  function normalizarTextoAsistente(txt) {
+    return (txt || '')
+      .toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9ñ\s]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  /* Busca la entrada de la base de conocimiento que mejor coincide con la
+     pregunta: las frases completas (2+ palabras) pesan más que palabras sueltas */
+  function buscarRespuestaAsistente(pregunta) {
+    const texto = normalizarTextoAsistente(pregunta);
+    if (!texto) return null;
+    let mejor = null, mejorPuntaje = 0;
+    BASE_CONOCIMIENTO_ASISTENTE.forEach(entrada => {
+      let puntaje = 0;
+      entrada.keywords.forEach(kw => {
+        if (kw.indexOf(' ') !== -1) {
+          if (texto.indexOf(kw) !== -1) puntaje += 3;
+        } else {
+          const re = new RegExp('\\b' + kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b');
+          if (re.test(texto)) puntaje += 1;
+        }
+      });
+      if (puntaje > mejorPuntaje) { mejorPuntaje = puntaje; mejor = entrada; }
+    });
+    return mejor ? mejor.respuesta : null;
+  }
+
+  function agregarMensajeAsistente(html, tipo) {
+    const cont = document.getElementById('assistantMessages');
+    if (!cont) return;
+    const div = document.createElement('div');
+    div.className = 'assistant-msg ' + tipo;
+    div.innerHTML = html;
+    cont.appendChild(div);
+    cont.scrollTop = cont.scrollHeight;
+  }
+
+  function mostrarEscribiendoAsistente() {
+    const cont = document.getElementById('assistantMessages');
+    if (!cont) return;
+    const div = document.createElement('div');
+    div.className = 'assistant-typing';
+    div.id = 'assistantTyping';
+    div.innerHTML = '<span></span><span></span><span></span>';
+    cont.appendChild(div);
+    cont.scrollTop = cont.scrollHeight;
+  }
+
+  function ocultarEscribiendoAsistente() {
+    const el = document.getElementById('assistantTyping');
+    if (el) el.remove();
+  }
+
+  function renderChipsAsistente() {
+    const cont = document.getElementById('assistantQuick');
+    if (!cont) return;
+    const sugerencias = [
+      ['💰 ¿Cómo pago?', '¿Cómo pago mi factura?'],
+      ['📶 Ver planes', '¿Qué planes tienen?'],
+      ['🛠️ No tengo internet', 'no tengo internet'],
+      ['📍 ¿Hay cobertura en mi zona?', '¿Tienen cobertura en mi vereda?']
+    ];
+    cont.innerHTML = sugerencias.map(s => `<button type="button" class="assistant-chip" onclick="preguntaRapidaAsistente('${s[1].replace(/'/g, "\\'")}')">${s[0]}</button>`).join('') +
+      `<button type="button" class="assistant-chip" onclick="window.open('https://wa.me/${WA_NUMERO_ASISTENTE}','_blank')">🙋 Hablar con un asesor</button>`;
+  }
+
+  function preguntaRapidaAsistente(texto) {
+    const input = document.getElementById('assistantInput');
+    if (input) input.value = texto;
+    enviarPreguntaAsistente();
+  }
+
+  function enviarPreguntaAsistente() {
+    const input = document.getElementById('assistantInput');
+    const texto = input ? input.value.trim() : '';
+    if (!texto) return;
+    agregarMensajeAsistente(texto.replace(/</g, '&lt;'), 'user');
+    if (input) input.value = '';
+    mostrarEscribiendoAsistente();
+    setTimeout(() => {
+      ocultarEscribiendoAsistente();
+      const respuesta = buscarRespuestaAsistente(texto);
+      agregarMensajeAsistente(respuesta || RESPUESTA_FALLBACK_ASISTENTE, 'bot');
+    }, 550 + Math.random() * 350);
+  }
+
+  /* Abre/cierra el panel del asistente. Al abrirlo por primera vez muestra
+     el saludo inicial y las preguntas sugeridas. */
+  function toggleAssistant(forzar) {
+    const panel = document.getElementById('assistantPanel');
+    if (!panel) return;
+    const abrir = typeof forzar === 'boolean' ? forzar : !panel.classList.contains('open');
+    panel.classList.toggle('open', abrir);
+    if (abrir) {
+      const cont = document.getElementById('assistantMessages');
+      if (cont && !cont.dataset.iniciado) {
+        cont.dataset.iniciado = '1';
+        agregarMensajeAsistente('¡Hola! 👋 Soy el asistente virtual de MCE Comunicaciones. Puedo ayudarte con pagos, tu estado de servicio, fallas técnicas, planes y cobertura. Escribe tu pregunta o elige una opción abajo.', 'bot');
+        renderChipsAsistente();
+      }
+      const input = document.getElementById('assistantInput');
+      if (input) setTimeout(() => input.focus(), 200);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const assistantInput = document.getElementById('assistantInput');
+    if (assistantInput) assistantInput.addEventListener('keypress', e => { if (e.key === 'Enter') enviarPreguntaAsistente(); });
+  });
 
   function closeMobileMenu() {
     const links = document.querySelector('.nav-links');
