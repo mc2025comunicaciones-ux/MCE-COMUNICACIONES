@@ -1226,7 +1226,7 @@
   }
   .faq-cta p { font-size: 0.92rem; color: rgba(255,255,255,0.7); margin-bottom: 14px; }
 
-  /* ——— Barra de Avisos y Mantenimientos ——— */
+  /* ——— Barra de Avisos y Mantenimientos (puede haber varios a la vez) ——— */
   .avisos-bar { display: none; }
   .avisos-bar.visible {
     display: block;
@@ -1234,10 +1234,12 @@
     position: relative;
     z-index: 90;
     padding: 0 5%;
-    animation: fadeUp 0.4s ease both;
   }
-  .avisos-bar-inner {
+  .avisos-bar-list {
     max-width: 1100px; margin: 0 auto;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .avisos-bar-item {
     display: flex; align-items: center; gap: 16px;
     background: rgba(10, 16, 48, 0.92);
     border: 1px solid rgba(255,255,255,0.1);
@@ -1246,18 +1248,19 @@
     padding: 16px 18px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.35);
     backdrop-filter: blur(6px);
+    animation: fadeUp 0.4s ease both;
   }
-  .avisos-bar.tipo-mantenimiento .avisos-bar-inner { --aviso-color: #3b82f6; }
-  .avisos-bar.tipo-falla .avisos-bar-inner { --aviso-color: #ef4444; }
-  .avisos-bar.tipo-info .avisos-bar-inner { --aviso-color: #94a3b8; }
+  .avisos-bar-item.tipo-mantenimiento { --aviso-color: #3b82f6; }
+  .avisos-bar-item.tipo-falla { --aviso-color: #ef4444; }
+  .avisos-bar-item.tipo-info { --aviso-color: #94a3b8; }
   .avisos-bar-icon {
     width: 42px; height: 42px; flex-shrink: 0; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     font-size: 1.3rem;
   }
-  .avisos-bar.tipo-mantenimiento .avisos-bar-icon { background: rgba(59,130,246,0.2); border: 1px solid rgba(59,130,246,0.45); }
-  .avisos-bar.tipo-falla .avisos-bar-icon { background: rgba(239,68,68,0.2); border: 1px solid rgba(239,68,68,0.45); }
-  .avisos-bar.tipo-info .avisos-bar-icon { background: rgba(148,163,184,0.2); border: 1px solid rgba(148,163,184,0.45); }
+  .avisos-bar-item.tipo-mantenimiento .avisos-bar-icon { background: rgba(59,130,246,0.2); border: 1px solid rgba(59,130,246,0.45); }
+  .avisos-bar-item.tipo-falla .avisos-bar-icon { background: rgba(239,68,68,0.2); border: 1px solid rgba(239,68,68,0.45); }
+  .avisos-bar-item.tipo-info .avisos-bar-icon { background: rgba(148,163,184,0.2); border: 1px solid rgba(148,163,184,0.45); }
   .avisos-bar-text { flex: 1; min-width: 0; }
   .avisos-bar-tag {
     display: inline-block; font-size: 0.66rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase;
@@ -1276,7 +1279,7 @@
   .avisos-bar-close:hover { background: rgba(255,255,255,0.18); color: var(--white); }
   @media (max-width: 640px) {
     .avisos-bar.visible { margin-top: 78px; }
-    .avisos-bar-inner { align-items: flex-start; padding: 14px; gap: 12px; }
+    .avisos-bar-item { align-items: flex-start; padding: 14px; gap: 12px; }
     .avisos-bar-icon { width: 36px; height: 36px; font-size: 1.1rem; }
     .avisos-bar-title { font-size: 0.86rem; }
     .avisos-bar-msg { font-size: 0.8rem; }
@@ -2919,33 +2922,44 @@ function enviarWhatsApp() {
 
         if (avisos.length === 0) return;
 
-        // Prioridad: falla > mantenimiento > info; entre iguales, el más reciente
+        // Prioridad: falla > mantenimiento > info; entre iguales, el más reciente.
+        // Se muestran TODOS los avisos vigentes (no solo el primero).
         const peso = { falla: 3, mantenimiento: 2, info: 1 };
         avisos.sort((a, b) => (peso[b.tipo] || 0) - (peso[a.tipo] || 0) || String(b.fechaInicio).localeCompare(String(a.fechaInicio)));
-        const aviso = avisos[0];
 
-        const est = estiloTipoAviso(aviso.tipo);
-        barra.className = 'avisos-bar visible ' + est.clase;
-        barra.innerHTML = `
-          <div class="avisos-bar-inner">
+        const tarjetas = avisos.map(aviso => {
+          const est = estiloTipoAviso(aviso.tipo);
+          return `
+          <div class="avisos-bar-item ${est.clase}">
             <div class="avisos-bar-icon">${est.icono}</div>
             <div class="avisos-bar-text">
               <div class="avisos-bar-tag">${est.etiqueta}${aviso.zona ? ' · ' + aviso.zona : ''}</div>
               <div class="avisos-bar-title">${aviso.titulo}</div>
               <div class="avisos-bar-msg">${aviso.mensaje}</div>
             </div>
-            <button type="button" class="avisos-bar-close" onclick="cerrarAvisoBar()" aria-label="Cerrar aviso">✕</button>
+            <button type="button" class="avisos-bar-close" onclick="cerrarAvisoBar(this)" aria-label="Cerrar aviso">✕</button>
           </div>`;
+        }).join('');
+
+        barra.className = 'avisos-bar visible';
+        barra.innerHTML = `<div class="avisos-bar-list" id="avisosBarList">${tarjetas}</div>`;
       })
       .catch(() => { /* si la pestaña "Avisos" aún no existe, simplemente no se muestra nada */ });
   }
 
-  /* Cerrar el aviso solo lo oculta mientras el cliente sigue viendo esta
-     misma página cargada. Si recarga o vuelve a entrar, el aviso reaparece
-     de nuevo mientras siga vigente (a propósito: así nadie se lo pierde). */
-  function cerrarAvisoBar() {
+  /* Cerrar un aviso solo lo oculta mientras el cliente sigue viendo esta
+     misma página cargada. Si recarga o vuelve a entrar, reaparece de nuevo
+     mientras siga vigente (a propósito: así nadie se lo pierde). Si cierra
+     todos los avisos, se oculta la barra completa. */
+  function cerrarAvisoBar(btn) {
+    const tarjeta = btn.closest('.avisos-bar-item');
+    if (tarjeta) tarjeta.remove();
+    const lista = document.getElementById('avisosBarList');
     const barra = document.getElementById('avisosBar');
-    if (barra) { barra.className = 'avisos-bar'; barra.innerHTML = ''; }
+    if (lista && barra && lista.children.length === 0) {
+      barra.className = 'avisos-bar';
+      barra.innerHTML = '';
+    }
   }
 
   function closeMobileMenu() {
