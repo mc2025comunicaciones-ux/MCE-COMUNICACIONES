@@ -4,6 +4,26 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MCE COMUNICACIONES - Internet De Calidad</title>
+<meta name="description" content="Internet De Calidad rural en Saladoblanco y Oporapa, Huila. Megas de calidad exclusivas para ti, soporte cercano y planes desde 8 hasta 20 Mbps.">
+
+<!-- Vista previa al compartir en WhatsApp, Facebook, etc. (Open Graph) -->
+<!-- IMPORTANTE: reemplaza el valor de og:url por la dirección real donde publiques esta página,
+     y sube el archivo mce-logo-social.jpg junto a este index.html para que la imagen se vea. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MCE Comunicaciones">
+<meta property="og:title" content="MCE Comunicaciones - Internet De Calidad">
+<meta property="og:description" content="Internet De Calidad rural en Saladoblanco y Oporapa, Huila. Megas de calidad exclusivas para ti, soporte cercano y planes desde 8 hasta 20 Mbps.">
+<meta property="og:image" content="mce-logo-social.jpg">
+<meta property="og:url" content="">
+<meta property="og:locale" content="es_CO">
+
+<!-- Vista previa en Twitter/X -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MCE Comunicaciones - Internet De Calidad">
+<meta name="twitter:description" content="Internet De Calidad rural en Saladoblanco y Oporapa, Huila. Megas de calidad exclusivas para ti, soporte cercano.">
+<meta name="twitter:image" content="mce-logo-social.jpg">
+
+<meta name="theme-color" content="#040d2e">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -1206,6 +1226,41 @@
   }
   .faq-cta p { font-size: 0.92rem; color: rgba(255,255,255,0.7); margin-bottom: 14px; }
 
+  /* ——— Barra de Avisos y Mantenimientos ——— */
+  .avisos-bar { display: none; }
+  .avisos-bar.visible {
+    display: block;
+    margin-top: 70px;
+    position: relative;
+    z-index: 90;
+    padding: 12px 5%;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .avisos-bar.tipo-mantenimiento { background: linear-gradient(90deg, rgba(37,99,235,0.28), rgba(59,130,246,0.14)); }
+  .avisos-bar.tipo-falla { background: linear-gradient(90deg, rgba(239,68,68,0.28), rgba(239,68,68,0.12)); }
+  .avisos-bar.tipo-info { background: linear-gradient(90deg, rgba(148,163,184,0.22), rgba(148,163,184,0.1)); }
+  .avisos-bar-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .avisos-bar-icon { font-size: 1.4rem; flex-shrink: 0; }
+  .avisos-bar-text { flex: 1; min-width: 0; }
+  .avisos-bar-title { font-size: 0.88rem; font-weight: 700; color: var(--white); margin-bottom: 2px; }
+  .avisos-bar-msg { font-size: 0.82rem; color: rgba(255,255,255,0.75); line-height: 1.4; }
+  .avisos-bar-msg strong { color: var(--blue-light); }
+  .avisos-bar-close {
+    background: rgba(255,255,255,0.12); border: none; color: var(--white);
+    width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: 0.9rem;
+    transition: background 0.2s;
+  }
+  .avisos-bar-close:hover { background: rgba(255,255,255,0.25); }
+  @media (max-width: 640px) {
+    .avisos-bar-inner { align-items: flex-start; }
+    .avisos-bar-title { font-size: 0.82rem; }
+    .avisos-bar-msg { font-size: 0.78rem; }
+  }
+
   /* ——— Asistente Virtual (chat local, sin costo de API) ——— */
   .assistant-toggle {
     position: fixed;
@@ -1687,6 +1742,9 @@
   </ul>
   <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false" onclick="toggleMobileMenu()"><span></span></button>
 </nav>
+
+<!-- Barra de Avisos y Mantenimientos (se llena sola si hay algún aviso vigente) -->
+<div class="avisos-bar" id="avisosBar"></div>
 
 <!-- HERO -->
 <section class="hero app-section active" id="inicio">
@@ -2770,7 +2828,91 @@ function enviarWhatsApp() {
   document.addEventListener('DOMContentLoaded', () => {
     const assistantInput = document.getElementById('assistantInput');
     if (assistantInput) assistantInput.addEventListener('keypress', e => { if (e.key === 'Enter') enviarPreguntaAsistente(); });
+    cargarAvisosVigentes();
   });
+
+  /* ===================== AVISOS Y MANTENIMIENTOS =====================
+     Lee la pestaña "Avisos" de la misma Hoja de Google (la administras
+     desde el panel, sección Avisos) y muestra el más relevante que esté
+     vigente en un banner debajo del menú. Si no hay ninguno, no se ve nada. */
+  function normalizarBooleanoAviso(v) {
+    const t = String(v || '').trim().toUpperCase();
+    return t === 'SI' || t === 'TRUE' || t === 'SÍ' || t === '1';
+  }
+
+  function avisoPublicoEsVigente(a) {
+    if (!normalizarBooleanoAviso(a.activo)) return false;
+    const hoy = new Date().toISOString().slice(0, 10);
+    if (a.fechaInicio && hoy < a.fechaInicio) return false;
+    if (a.fechaFin && hoy > a.fechaFin) return false;
+    return true;
+  }
+
+  function estiloTipoAviso(tipo) {
+    if (tipo === 'falla') return { clase: 'tipo-falla', icono: '⚠️' };
+    if (tipo === 'mantenimiento') return { clase: 'tipo-mantenimiento', icono: '🔧' };
+    return { clase: 'tipo-info', icono: 'ℹ️' };
+  }
+
+  function cargarAvisosVigentes() {
+    const barra = document.getElementById('avisosBar');
+    if (!barra) return;
+    const urlAvisos = 'https://docs.google.com/spreadsheets/d/' + SPREADSHEET_ID + '/gviz/tq?sheet=Avisos&t=' + Date.now();
+    fetch(urlAvisos)
+      .then(r => { if (!r.ok) throw new Error('sin avisos'); return r.text(); })
+      .then(texto => {
+        const inicio = texto.indexOf('{');
+        const fin = texto.lastIndexOf('}');
+        if (inicio === -1 || fin === -1) return;
+        const datos = JSON.parse(texto.substring(inicio, fin + 1));
+        const filas = (datos.table && datos.table.rows) ? datos.table.rows : [];
+        // Columnas: id(0), titulo(1), mensaje(2), tipo(3), zona(4), fechaInicio(5), fechaFin(6), activo(7)
+        const avisos = filas.map(fila => {
+          const c = fila.c;
+          if (!c) return null;
+          const val = i => (c[i] ? (c[i].f || c[i].v) : '');
+          return {
+            id: val(0), titulo: val(1), mensaje: val(2), tipo: val(3) || 'info',
+            zona: val(4), fechaInicio: val(5), fechaFin: val(6), activo: val(7)
+          };
+        }).filter(Boolean).filter(avisoPublicoEsVigente);
+
+        if (avisos.length === 0) return;
+
+        // Prioridad: falla > mantenimiento > info; entre iguales, el más reciente
+        const peso = { falla: 3, mantenimiento: 2, info: 1 };
+        avisos.sort((a, b) => (peso[b.tipo] || 0) - (peso[a.tipo] || 0) || String(b.fechaInicio).localeCompare(String(a.fechaInicio)));
+        const aviso = avisos[0];
+
+        // Si el cliente ya cerró este mismo aviso en esta sesión, no se lo volvemos a mostrar
+        let cerrados = [];
+        try { cerrados = JSON.parse(sessionStorage.getItem('mce_avisos_cerrados') || '[]'); } catch (e) {}
+        if (cerrados.indexOf(aviso.id) !== -1) return;
+
+        const est = estiloTipoAviso(aviso.tipo);
+        barra.className = 'avisos-bar visible ' + est.clase;
+        barra.innerHTML = `
+          <div class="avisos-bar-inner">
+            <div class="avisos-bar-icon">${est.icono}</div>
+            <div class="avisos-bar-text">
+              <div class="avisos-bar-title">${aviso.titulo}${aviso.zona ? ' — <strong>' + aviso.zona + '</strong>' : ''}</div>
+              <div class="avisos-bar-msg">${aviso.mensaje}</div>
+            </div>
+            <button type="button" class="avisos-bar-close" onclick="cerrarAvisoBar('${String(aviso.id).replace(/'/g, "\\'")}')" aria-label="Cerrar aviso">✕</button>
+          </div>`;
+      })
+      .catch(() => { /* si la pestaña "Avisos" aún no existe, simplemente no se muestra nada */ });
+  }
+
+  function cerrarAvisoBar(id) {
+    const barra = document.getElementById('avisosBar');
+    if (barra) { barra.className = 'avisos-bar'; barra.innerHTML = ''; }
+    try {
+      const cerrados = JSON.parse(sessionStorage.getItem('mce_avisos_cerrados') || '[]');
+      if (cerrados.indexOf(id) === -1) cerrados.push(id);
+      sessionStorage.setItem('mce_avisos_cerrados', JSON.stringify(cerrados));
+    } catch (e) { /* se ignora si sessionStorage no está disponible */ }
+  }
 
   function closeMobileMenu() {
     const links = document.querySelector('.nav-links');
