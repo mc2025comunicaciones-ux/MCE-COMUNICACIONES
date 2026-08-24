@@ -1269,7 +1269,8 @@
   .assistant-close:hover { background: rgba(255,255,255,0.08); color: var(--white); }
 
   .assistant-messages {
-    flex: 1; overflow-y: auto; padding: 16px 14px; display: flex; flex-direction: column; gap: 10px;
+    flex: 1; min-height: 0; overflow-y: auto; scroll-behavior: smooth;
+    padding: 16px 14px; display: flex; flex-direction: column; gap: 10px;
   }
   .assistant-msg { max-width: 86%; padding: 10px 14px; border-radius: 14px; font-size: 0.86rem; line-height: 1.5; }
   .assistant-msg a { color: var(--blue-electric); text-decoration: underline; }
@@ -1289,7 +1290,8 @@
   .assistant-typing span:nth-child(3) { animation-delay: 0.3s; }
   @keyframes assistantTyping { 0%, 60%, 100% { opacity: 0.3; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-3px); } }
 
-  .assistant-quick { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 14px 12px; flex-shrink: 0; }
+  .assistant-quick { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 14px 12px; flex-shrink: 0; max-height: 200px; overflow: hidden; transition: max-height 0.25s ease, padding 0.25s ease; }
+  .assistant-quick.hidden { max-height: 0; padding-top: 0; padding-bottom: 0; }
   .assistant-chip {
     background: rgba(59,130,246,0.12); border: 1px solid rgba(59,130,246,0.3); color: var(--blue-light);
     font-size: 0.76rem; font-weight: 600; padding: 7px 12px; border-radius: 50px; cursor: pointer;
@@ -1307,6 +1309,13 @@
   }
   .assistant-input:focus { border-color: var(--blue-electric); }
   .assistant-input::placeholder { color: rgba(255,255,255,0.3); }
+  .assistant-suggest-toggle {
+    width: 42px; height: 42px; flex-shrink: 0; background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(59,130,246,0.25); border-radius: 10px; color: var(--blue-light);
+    font-size: 1.05rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .assistant-suggest-toggle:hover { background: rgba(59,130,246,0.15); border-color: rgba(59,130,246,0.4); }
   .assistant-send {
     width: 42px; height: 42px; flex-shrink: 0; background: var(--blue-bright); border: none; border-radius: 10px;
     color: var(--white); font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
@@ -1654,6 +1663,7 @@
   <div class="assistant-messages" id="assistantMessages"></div>
   <div class="assistant-quick" id="assistantQuick"></div>
   <div class="assistant-input-row">
+    <button type="button" class="assistant-suggest-toggle" onclick="toggleSugerenciasAsistente()" aria-label="Ver preguntas sugeridas" title="Preguntas sugeridas">💡</button>
     <input type="text" id="assistantInput" class="assistant-input" placeholder="Escribe tu pregunta..." autocomplete="off">
     <button type="button" class="assistant-send" onclick="enviarPreguntaAsistente()" aria-label="Enviar pregunta">➤</button>
   </div>
@@ -2540,6 +2550,81 @@ function enviarWhatsApp() {
       id: 'gracias',
       keywords: ['gracias', 'muchas gracias', 'listo', 'ok gracias', 'vale gracias'],
       respuesta: '¡Con gusto! Si te surge otra duda, aquí estoy. También puedes escribirnos por WhatsApp cuando quieras. 🙌'
+    },
+    {
+      id: 'identidad',
+      keywords: ['quien te creo', 'quien te hizo', 'quien te programo', 'quien eres', 'que eres', 'eres un robot', 'eres una ia', 'eres real', 'eres humano', 'eres persona'],
+      respuesta: 'Soy el asistente virtual de <strong>MCE Comunicaciones</strong> 🤖. Me crearon para ayudarte a resolver tus dudas rápido, las 24 horas. Para lo que no pueda resolver yo, nuestro equipo humano está siempre disponible por WhatsApp.'
+    },
+    {
+      id: 'empresa',
+      keywords: ['nombre de la empresa', 'como se llama la empresa', 'quienes son ustedes', 'de donde son', 'quien es mce'],
+      respuesta: 'Somos <strong>MCE Comunicaciones</strong>, una empresa local que lleva Internet Dedicado a zonas rurales de Saladoblanco y Oporapa, Huila. Conoce más sobre nosotros en <a href="#nosotros" onclick="showSection(\'nosotros\');toggleAssistant(false);return false;">Nosotros</a>.'
+    },
+    {
+      id: 'mora',
+      keywords: ['mora', 'atrasado', 'no pague a tiempo', 'me suspendieron', 'deuda', 'debo', 'estoy atrasado'],
+      respuesta: 'Si tu pago está atrasado, el servicio puede quedar suspendido temporalmente. Ponte al día por Nequi o Daviplata al <strong>313 834 2442</strong> y repórtalo por WhatsApp; normalmente reconectamos poco después de confirmar el pago.'
+    },
+    {
+      id: 'reconexion',
+      keywords: ['reconexion', 'reconectar', 'cuando vuelve el servicio', 'despues de pagar cuanto tarda', 'ya pague y sigo sin servicio'],
+      respuesta: 'Después de reportar tu pago, la reconexión suele hacerse en poco tiempo. Si pasado un rato sigues sin servicio, escríbenos por WhatsApp con tu comprobante y lo revisamos de inmediato.'
+    },
+    {
+      id: 'cambiar_plan',
+      keywords: ['cambiar de plan', 'subir de plan', 'mas megas', 'aumentar velocidad', 'mejorar plan', 'subir velocidad', 'quiero mas velocidad'],
+      respuesta: 'Claro que sí puedes cambiar a un plan de más megas. Escríbenos por WhatsApp contándonos tu plan actual y a cuál quieres pasarte, y te confirmamos disponibilidad y valor.'
+    },
+    {
+      id: 'clave_wifi',
+      keywords: ['contrasena wifi', 'clave wifi', 'cambiar clave', 'olvide la clave', 'clave del router', 'contrasena del router'],
+      respuesta: 'La clave de tu wifi normalmente está en una etiqueta pegada debajo o al lado del router. Si quieres cambiarla o ya no la tienes, escríbenos por WhatsApp y te ayudamos a configurarla.'
+    },
+    {
+      id: 'limite_datos',
+      keywords: ['limite de datos', 'se acaba el internet', 'datos ilimitados', 'tope de consumo', 'tiene limite'],
+      respuesta: 'Nuestros planes de Internet Dedicado no tienen límite de datos: navega, trabaja y transmite todo lo que necesites dentro de la velocidad de tu plan.'
+    },
+    {
+      id: 'equipo_danado',
+      keywords: ['equipo danado', 'router danado', 'se quemo el router', 'robaron el router', 'router roto', 'antena danada'],
+      respuesta: 'Si el equipo se dañó (por ejemplo por un rayo) o hubo un robo, cuéntanos por WhatsApp para revisar tu caso y coordinar el cambio o reposición del equipo.'
+    },
+    {
+      id: 'requisitos',
+      keywords: ['requisitos para contratar', 'que necesito para contratar', 'documentos para contratar', 'como me afilio', 'como adquiero el servicio'],
+      respuesta: 'Para contratar normalmente solo necesitamos tu cédula y confirmar que haya cobertura en tu vereda. Escríbenos por WhatsApp y te guiamos paso a paso, sin complicaciones.'
+    },
+    {
+      id: 'tormenta',
+      keywords: ['se fue la luz', 'hubo tormenta', 'cayo un rayo', 'apagon', 'se fue la energia', 'relampago'],
+      respuesta: 'Después de que vuelva la luz, espera unos minutos a que el router y la red se reconecten solos. Si pasados 15 a 20 minutos sigues sin señal, es posible que un equipo se haya dañado por la tormenta; escríbenos. Tip: un regulador de voltaje protege tu router de las subidas de tensión.'
+    },
+    {
+      id: 'intermitente',
+      keywords: ['se corta', 'intermitente', 'se desconecta a cada rato', 'entra y sale', 'a veces si a veces no'],
+      respuesta: 'Revisa que el router no esté muy cerca de otros aparatos electrónicos o pegado a paredes gruesas, y reinícialo. Anota a qué horas se corta: ese dato nos ayuda mucho a diagnosticar si es tu casa o la red. Cuéntanoslo por WhatsApp.'
+    },
+    {
+      id: 'dispositivos',
+      keywords: ['cuantos dispositivos', 'cuantos aparatos puedo conectar', 'varios celulares', 'compartir wifi'],
+      respuesta: 'Puedes conectar varios dispositivos a la vez (celulares, TV, cámaras, computador). Eso sí, entre más dispositivos activos al mismo tiempo, más se reparte la velocidad disponible en tu plan.'
+    },
+    {
+      id: 'mudanza',
+      keywords: ['me voy a mudar', 'cambio de direccion', 'traslado del servicio', 'mudanza', 'me cambio de casa'],
+      respuesta: 'Si te vas a mudar dentro de nuestra zona de cobertura, podemos trasladar tu servicio. Escríbenos por WhatsApp con tu nueva dirección o vereda y verificamos disponibilidad.'
+    },
+    {
+      id: 'reclamo_factura',
+      keywords: ['factura mal', 'me cobraron de mas', 'error en el cobro', 'reclamo por el pago', 'valor incorrecto'],
+      respuesta: 'Lamentamos el inconveniente. Escríbenos por WhatsApp contándonos el detalle (fecha, valor y lo que ves distinto) y lo revisamos personalmente lo antes posible.'
+    },
+    {
+      id: 'chiste',
+      keywords: ['cuentame un chiste', 'hazme reir', 'dime un chiste'],
+      respuesta: '😄 No soy muy bueno con los chistes, pero te aseguro que nuestras megas dedicadas sí son en serio. ¿Te ayudo con algo de tu servicio?'
     }
   ];
 
@@ -2576,6 +2661,19 @@ function enviarWhatsApp() {
     return mejor ? mejor.respuesta : null;
   }
 
+  /* Hace scroll hasta el final de la conversación. Se apoya en requestAnimationFrame
+     + scrollIntoView para asegurar que corra después de que el navegador termine
+     de calcular el layout del nuevo mensaje (evita que el chat se quede "trabado" arriba) */
+  function irAlFinalAsistente() {
+    const cont = document.getElementById('assistantMessages');
+    if (!cont) return;
+    requestAnimationFrame(() => {
+      cont.scrollTop = cont.scrollHeight;
+      const ultimo = cont.lastElementChild;
+      if (ultimo && ultimo.scrollIntoView) ultimo.scrollIntoView({ block: 'end', behavior: 'smooth' });
+    });
+  }
+
   function agregarMensajeAsistente(html, tipo) {
     const cont = document.getElementById('assistantMessages');
     if (!cont) return;
@@ -2583,7 +2681,7 @@ function enviarWhatsApp() {
     div.className = 'assistant-msg ' + tipo;
     div.innerHTML = html;
     cont.appendChild(div);
-    cont.scrollTop = cont.scrollHeight;
+    irAlFinalAsistente();
   }
 
   function mostrarEscribiendoAsistente() {
@@ -2594,7 +2692,7 @@ function enviarWhatsApp() {
     div.id = 'assistantTyping';
     div.innerHTML = '<span></span><span></span><span></span>';
     cont.appendChild(div);
-    cont.scrollTop = cont.scrollHeight;
+    irAlFinalAsistente();
   }
 
   function ocultarEscribiendoAsistente() {
@@ -2609,10 +2707,21 @@ function enviarWhatsApp() {
       ['💰 ¿Cómo pago?', '¿Cómo pago mi factura?'],
       ['📶 Ver planes', '¿Qué planes tienen?'],
       ['🛠️ No tengo internet', 'no tengo internet'],
-      ['📍 ¿Hay cobertura en mi zona?', '¿Tienen cobertura en mi vereda?']
+      ['📍 ¿Hay cobertura en mi zona?', '¿Tienen cobertura en mi vereda?'],
+      ['🤖 ¿Quién te creó?', '¿Quién te creó?']
     ];
     cont.innerHTML = sugerencias.map(s => `<button type="button" class="assistant-chip" onclick="preguntaRapidaAsistente('${s[1].replace(/'/g, "\\'")}')">${s[0]}</button>`).join('') +
       `<button type="button" class="assistant-chip" onclick="window.open('https://wa.me/${WA_NUMERO_ASISTENTE}','_blank')">🙋 Hablar con un asesor</button>`;
+    cont.classList.remove('hidden');
+  }
+
+  /* Muestra u oculta la fila de preguntas sugeridas a demanda, para que no
+     estorbe permanentemente sobre la conversación */
+  function toggleSugerenciasAsistente() {
+    const cont = document.getElementById('assistantQuick');
+    if (!cont) return;
+    if (!cont.innerHTML.trim()) renderChipsAsistente();
+    else cont.classList.toggle('hidden');
   }
 
   function preguntaRapidaAsistente(texto) {
@@ -2627,6 +2736,10 @@ function enviarWhatsApp() {
     if (!texto) return;
     agregarMensajeAsistente(texto.replace(/</g, '&lt;'), 'user');
     if (input) input.value = '';
+    // Las sugerencias solo se necesitan al inicio; una vez el cliente ya está
+    // escribiendo, se ocultan para no estorbar sobre la conversación.
+    const chips = document.getElementById('assistantQuick');
+    if (chips) chips.classList.add('hidden');
     mostrarEscribiendoAsistente();
     setTimeout(() => {
       ocultarEscribiendoAsistente();
@@ -2646,7 +2759,7 @@ function enviarWhatsApp() {
       const cont = document.getElementById('assistantMessages');
       if (cont && !cont.dataset.iniciado) {
         cont.dataset.iniciado = '1';
-        agregarMensajeAsistente('¡Hola! 👋 Soy el asistente virtual de MCE Comunicaciones. Puedo ayudarte con pagos, tu estado de servicio, fallas técnicas, planes y cobertura. Escribe tu pregunta o elige una opción abajo.', 'bot');
+        agregarMensajeAsistente('¡Hola! 👋 Soy el asistente virtual de MCE Comunicaciones. Puedo ayudarte con pagos, tu estado de servicio, fallas técnicas, planes, cobertura y mucho más. Escribe tu pregunta o elige una opción abajo.', 'bot');
         renderChipsAsistente();
       }
       const input = document.getElementById('assistantInput');
