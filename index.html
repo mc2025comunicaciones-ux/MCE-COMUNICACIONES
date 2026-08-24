@@ -1093,6 +1093,100 @@
     .gestion-info-grid { grid-template-columns: 1fr 1fr; }
   }
 
+  /* ——— Recordar cédula / cambiar de usuario ——— */
+  .gestion-remember {
+    max-width: 680px; margin: 14px auto 0; text-align: right;
+    font-size: 0.78rem; color: rgba(255,255,255,0.45);
+  }
+  .gestion-remember button {
+    background: none; border: none; color: var(--blue-electric);
+    font-family: 'Barlow', sans-serif; font-size: 0.78rem; font-weight: 600;
+    cursor: pointer; text-decoration: underline; padding: 0;
+  }
+
+  /* ——— Estado por vencer (amarillo) ——— */
+  .gestion-status-badge.porvencer {
+    background: rgba(245, 158, 11, 0.18);
+    border: 1px solid rgba(245, 158, 11, 0.4);
+    color: #fbbf24;
+  }
+  .gestion-status-badge.porvencer::before {
+    content: ''; width: 7px; height: 7px; border-radius: 50%;
+    background: #f59e0b; box-shadow: 0 0 6px #f59e0b;
+  }
+  .gestion-dias-nota { font-size: 0.76rem; margin-top: 4px; color: rgba(255,255,255,0.45); font-weight: 500; }
+
+  /* ——— Botón copiar número de pago ——— */
+  .gestion-copy-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+    color: var(--white); font-family: 'Barlow', sans-serif; font-size: 0.76rem; font-weight: 700;
+    letter-spacing: 0.5px; text-transform: uppercase; padding: 6px 12px; border-radius: 8px;
+    cursor: pointer; margin-left: 10px; transition: background 0.2s, border-color 0.2s;
+    vertical-align: middle;
+  }
+  .gestion-copy-btn:hover { background: rgba(59,130,246,0.2); border-color: rgba(59,130,246,0.4); }
+
+  /* ——— Acciones (dos botones lado a lado en desktop) ——— */
+  .gestion-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
+  @media (max-width: 560px) { .gestion-actions { grid-template-columns: 1fr; } }
+  .gestion-actions .gestion-whatsapp-btn { margin-top: 0; }
+  .gestion-support-btn { background: linear-gradient(135deg, #2563eb, #1d4ed8); box-shadow: 0 4px 20px rgba(37,99,235,0.3); }
+  .gestion-support-btn:hover { background: linear-gradient(135deg, #1d4ed8, #1e3a8a); }
+
+  /* ——— Historial de pagos ——— */
+  .gestion-historial { margin-top: 22px; }
+  .gestion-historial-title {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase; color: var(--blue-light); margin-bottom: 10px;
+  }
+  .gestion-historial-table { width: 100%; border-collapse: collapse; overflow: hidden; border-radius: 10px; }
+  .gestion-historial-table th {
+    text-align: left; font-size: 0.68rem; letter-spacing: 1px; text-transform: uppercase;
+    color: rgba(255,255,255,0.45); font-weight: 600; padding: 8px 10px;
+    background: rgba(255,255,255,0.05); border-bottom: 1px solid rgba(59,130,246,0.2);
+  }
+  .gestion-historial-table td {
+    font-size: 0.86rem; color: rgba(255,255,255,0.85); padding: 9px 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .gestion-historial-table tr:last-child td { border-bottom: none; }
+  .gestion-historial-empty { font-size: 0.82rem; color: rgba(255,255,255,0.4); padding: 6px 0; }
+
+  /* ——— Toast de confirmación (copiado, etc.) ——— */
+  .mce-toast {
+    position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: #0d1338; border: 1px solid rgba(59,130,246,0.4); color: var(--white);
+    padding: 12px 22px; border-radius: 10px; font-size: 0.86rem; font-weight: 600;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4); z-index: 999; opacity: 0;
+    transition: opacity 0.25s, transform 0.25s; pointer-events: none;
+  }
+  .mce-toast.visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ——— Centro de Ayuda (FAQ) ——— */
+  .faq-list { max-width: 780px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+  .faq-item {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(59,130,246,0.18);
+    border-radius: 14px; overflow: hidden; transition: border-color 0.2s;
+  }
+  .faq-item.open { border-color: rgba(59,130,246,0.45); }
+  .faq-question {
+    width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    background: none; border: none; text-align: left; cursor: pointer;
+    padding: 20px 22px; font-family: 'Barlow', sans-serif; font-size: 0.98rem; font-weight: 600;
+    color: var(--white);
+  }
+  .faq-question .faq-icon { flex-shrink: 0; font-size: 1.3rem; color: var(--blue-electric); transition: transform 0.25s; }
+  .faq-item.open .faq-question .faq-icon { transform: rotate(45deg); }
+  .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease; }
+  .faq-item.open .faq-answer { max-height: 400px; }
+  .faq-answer p { padding: 0 22px 20px; font-size: 0.9rem; line-height: 1.6; color: rgba(255,255,255,0.65); }
+  .faq-cta {
+    max-width: 780px; margin: 40px auto 0; text-align: center; padding: 26px;
+    background: rgba(37,99,235,0.1); border: 1px solid rgba(59,130,246,0.3); border-radius: 16px;
+  }
+  .faq-cta p { font-size: 0.92rem; color: rgba(255,255,255,0.7); margin-bottom: 14px; }
+
   /* ——— FOOTER ——— */
   footer {
     background: #020a1f;
@@ -1419,6 +1513,7 @@
         <li><a href="#cobertura" data-section="cobertura" onclick="showSection('cobertura');return false;">Cobertura</a></li>
     <li><a href="#nosotros" data-section="nosotros" onclick="showSection('nosotros');return false;">Nosotros</a></li>
     <li><a href="#contacto" data-section="contacto" onclick="showSection('contacto');return false;">Contacto</a></li>
+    <li><a href="#ayuda" data-section="ayuda" onclick="showSection('ayuda');return false;">Ayuda</a></li>
     <li><a href="#gestion" data-section="gestion" class="nav-cta" onclick="showSection('gestion');return false;">👤 Gestión Cliente</a></li>
   </ul>
   <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false" onclick="toggleMobileMenu()"><span></span></button>
@@ -1472,6 +1567,11 @@
       <div class="dash-card-icon">☎️</div>
       <div class="dash-card-title">Contacto</div>
       <div class="dash-card-desc">Horarios de atención, canales y formulario de contacto.</div>
+    </a>
+    <a class="dash-card" href="#ayuda" onclick="showSection('ayuda');return false;">
+      <div class="dash-card-icon">❓</div>
+      <div class="dash-card-title">Centro de Ayuda</div>
+      <div class="dash-card-desc">Respuestas rápidas sobre pagos, instalación, fallas y más.</div>
     </a>
     <a class="dash-card" href="#gestion" onclick="showSection('gestion');return false;">
       <div class="dash-card-icon">👤</div>
@@ -1735,6 +1835,89 @@
   </div>
 </section>
 
+<!-- CENTRO DE AYUDA (FAQ) -->
+<section class="app-section" id="ayuda" style="background:#040d2e;">
+  <a class="section-back" href="#inicio" onclick="showSection('inicio');return false;">← Volver al inicio</a>
+  <p class="section-label" style="text-align:center;">Centro de Ayuda</p>
+  <h2 class="section-title" style="text-align:center;">PREGUNTAS<br>FRECUENTES</h2>
+  <p class="section-desc" style="margin: 0 auto 40px; text-align: center;">
+    Antes de escribirnos, revisa si tu duda ya está resuelta aquí. Si no, con gusto te atendemos por WhatsApp.
+  </p>
+
+  <div class="faq-list" id="faqList">
+    <div class="faq-item">
+      <button class="faq-question" type="button" onclick="toggleFaq(this)">
+        <span>💰 ¿Cómo pago mi factura mensual?</span>
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>MCE opera bajo un modelo 100% digital: recibimos pagos por <strong>Nequi</strong> y <strong>Daviplata</strong> al número <strong>313 834 2442</strong>. No se recibe efectivo. Después de pagar, envíanos el comprobante por WhatsApp o repórtalo desde <a href="#gestion" onclick="showSection('gestion');return false;" style="color:var(--blue-electric);">Gestión Cliente</a> para que quede registrado.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" type="button" onclick="toggleFaq(this)">
+        <span>📶 ¿Cómo sé si mi servicio está al día o suspendido?</span>
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>Entra a <a href="#gestion" onclick="showSection('gestion');return false;" style="color:var(--blue-electric);">Gestión Cliente</a> e ingresa tu número de cédula. Ahí verás tu plan, tu estado (al día, por vencer o suspendido) y la fecha de tu próximo pago, en segundos.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" type="button" onclick="toggleFaq(this)">
+        <span>🛠️ Tengo una falla o se cayó mi internet, ¿qué hago?</span>
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>Escríbenos por WhatsApp contándonos qué pasa (sin señal, se corta intermitente, luces del router, etc.). Entre más detalles nos des, más rápido podemos ayudarte o programar una visita técnica.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" type="button" onclick="toggleFaq(this)">
+        <span>📍 ¿Tienen cobertura en mi vereda?</span>
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>Cubrimos zonas rurales priorizadas de <strong>Saladoblanco</strong> y <strong>Oporapa</strong>, Huila, y seguimos ampliando la red. Escríbenos con tu vereda exacta y te confirmamos disponibilidad y tiempos de instalación.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" type="button" onclick="toggleFaq(this)">
+        <span>🔧 ¿Cuánto tarda la instalación de un plan nuevo?</span>
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>Depende de la disponibilidad de la zona y del punto de conexión más cercano. En general coordinamos la visita técnica en pocos días después de confirmar tu solicitud. Te lo confirmamos exactamente al contactarte.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" type="button" onclick="toggleFaq(this)">
+        <span>📄 ¿El servicio tiene contrato de permanencia?</span>
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>Te explicamos las condiciones exactas de tu plan al momento de la contratación. Para dudas puntuales sobre tu caso, contáctanos por WhatsApp y con gusto te las aclaramos.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" type="button" onclick="toggleFaq(this)">
+        <span>🚫 Quiero cancelar o suspender temporalmente mi servicio</span>
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-answer">
+        <p>Sin problema. Escríbenos por WhatsApp indicando tu nombre, cédula y el motivo, y te guiamos con el proceso.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="faq-cta">
+    <p>¿No encontraste lo que buscabas?</p>
+    <a href="https://wa.me/573241100037" target="_blank" class="gestion-whatsapp-btn" style="max-width:320px; margin:0 auto;">
+      💬 Escríbenos por WhatsApp
+    </a>
+  </div>
+</section>
+
 <!-- CONTACT -->
 <section class="contact-section app-section" id="contacto">
   <a class="section-back" href="#inicio" onclick="showSection('inicio');return false;">← Volver al inicio</a>
@@ -1989,7 +2172,47 @@ function enviarWhatsApp() {
   // MÉTODO DIRECTO A LA BASE DE DATOS SIN DEPENDER DE APPS SCRIPT (CORS BYPASS)
   const SPREADSHEET_ID = '1UsNouaSVr7fUzufxnBorAna1JcUYQriyGELLpyY9YIQ';
 
-  const DASH_SECTIONS = ['inicio', 'planes', 'speedtest', 'cobertura', 'nosotros', 'contacto', 'gestion'];
+  const DASH_SECTIONS = ['inicio', 'planes', 'speedtest', 'cobertura', 'nosotros', 'ayuda', 'contacto', 'gestion'];
+
+  /* Acordeón del Centro de Ayuda: abre/cierra una pregunta sin recargar la página */
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    if (!item) return;
+    const yaAbierto = item.classList.contains('open');
+    document.querySelectorAll('#faqList .faq-item.open').forEach(el => el.classList.remove('open'));
+    if (!yaAbierto) item.classList.add('open');
+  }
+
+  /* Toast simple de confirmación, reutilizable en toda la página */
+  function mostrarToast(msg) {
+    let toast = document.getElementById('mceToast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'mceToast';
+      toast.className = 'mce-toast';
+      document.body.appendChild(toast);
+    }
+    toast.textContent = msg;
+    toast.classList.add('visible');
+    clearTimeout(window._mceToastTimer);
+    window._mceToastTimer = setTimeout(() => toast.classList.remove('visible'), 2600);
+  }
+
+  /* Copia texto al portapapeles con fallback para navegadores antiguos */
+  function copiarTexto(texto) {
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(texto).then(() => mostrarToast('📋 Número copiado: ' + texto));
+    } else {
+      const temp = document.createElement('textarea');
+      temp.value = texto;
+      temp.style.position = 'fixed';
+      temp.style.opacity = '0';
+      document.body.appendChild(temp);
+      temp.select();
+      try { document.execCommand('copy'); mostrarToast('📋 Número copiado: ' + texto); } catch (e) { mostrarToast('No se pudo copiar. Número: ' + texto); }
+      document.body.removeChild(temp);
+    }
+  }
 
   function closeMobileMenu() {
     const links = document.querySelector('.nav-links');
@@ -2034,6 +2257,13 @@ function enviarWhatsApp() {
     const input = document.getElementById('cedulaInput');
     if (input) input.addEventListener('keypress', e => { if (e.key === 'Enter') buscarCliente(); });
 
+    // Si el navegador ya recuerda la última cédula consultada, la sugerimos
+    // (no se busca sola: el usuario debe presionar Consultar, por privacidad).
+    try {
+      const ultimaCedula = localStorage.getItem('mce_ultima_cedula');
+      if (ultimaCedula && input) input.value = ultimaCedula;
+    } catch (e) { /* almacenamiento no disponible, se ignora */ }
+
     const initial = window.location.hash ? window.location.hash.replace('#', '') : 'inicio';
     showSection(initial);
   });
@@ -2050,6 +2280,77 @@ function enviarWhatsApp() {
     const current = window.location.hash ? window.location.hash.replace('#', '') : 'inicio';
     showSection(current);
   });
+
+  /* Trae los últimos pagos registrados de este cliente desde la hoja "Pagos"
+     del mismo Google Sheet (columna B = cedulaCliente), para mostrar un
+     historial real en el portal. Si la hoja aún no existe o está vacía,
+     resuelve con un arreglo vacío en vez de fallar la consulta completa. */
+  function obtenerHistorialPagos(cedula) {
+    const urlPagos = 'https://docs.google.com/spreadsheets/d/' + SPREADSHEET_ID + '/gviz/tq?sheet=Pagos&t=' + Date.now();
+    return fetch(urlPagos)
+      .then(r => { if (!r.ok) throw new Error('sin pagos'); return r.text(); })
+      .then(texto => {
+        const inicio = texto.indexOf('{');
+        const fin = texto.lastIndexOf('}');
+        if (inicio === -1 || fin === -1) return [];
+        const datos = JSON.parse(texto.substring(inicio, fin + 1));
+        const filas = (datos.table && datos.table.rows) ? datos.table.rows : [];
+        // Columnas de "Pagos": id(0), cedulaCliente(1), nombreCliente(2), periodo(3), fecha(4), valor(5), autorizadoPor(6), numero(7), formaPago(8)
+        const propios = [];
+        filas.forEach(fila => {
+          const c = fila.c;
+          if (!c || !c[1]) return;
+          const vPuro = c[1].v ? c[1].v.toString().trim() : '';
+          const vFormateado = c[1].f ? c[1].f.toString().trim() : '';
+          if (vPuro === cedula || vFormateado === cedula || vPuro.replace(/[.,]/g, '') === cedula) {
+            propios.push({
+              periodo: c[3] ? (c[3].f || c[3].v) : '—',
+              fecha: c[4] ? (c[4].f || c[4].v) : '—',
+              valor: c[5] ? (c[5].f || c[5].v) : '—',
+              formaPago: c[8] ? (c[8].f || c[8].v) : ''
+            });
+          }
+        });
+        // Los más recientes primero, máximo 6 para no saturar la vista
+        propios.reverse();
+        return propios.slice(0, 6);
+      });
+  }
+
+  /* Intenta calcular cuántos días faltan (o han pasado) hasta la fecha de
+     vencimiento del cliente. Soporta varios formatos comunes de fecha en
+     español; si no logra interpretarla, devuelve null y el portal sigue
+     usando el estado de texto tal cual viene de la hoja. */
+  function calcularDiasVencimiento(fechaTexto) {
+    if (!fechaTexto || typeof fechaTexto !== 'string') return null;
+    const texto = fechaTexto.trim();
+    const MESES = { ene:0, feb:1, mar:2, abr:3, may:4, jun:5, jul:6, ago:7, sep:8, oct:9, nov:10, dic:11 };
+    let fecha = null;
+
+    let m = texto.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/);
+    if (m) {
+      let [, d, mo, y] = m;
+      if (y.length === 2) y = '20' + y;
+      fecha = new Date(Number(y), Number(mo) - 1, Number(d));
+    }
+    if (!fecha) {
+      m = texto.toLowerCase().match(/^(\d{1,2})\s*(?:de)?\s*([a-záéíóú]{3,})\s*(?:de)?\s*(\d{4})$/);
+      if (m) {
+        const clave = m[2].slice(0, 3);
+        if (MESES.hasOwnProperty(clave)) fecha = new Date(Number(m[3]), MESES[clave], Number(m[1]));
+      }
+    }
+    if (!fecha) {
+      m = texto.match(/^(\d{4})-(\d{2})-(\d{2})/);
+      if (m) fecha = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+    }
+    if (!fecha || isNaN(fecha.getTime())) return null;
+
+    const hoy = new Date();
+    const hoySinHora = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+    const diffMs = fecha.getTime() - hoySinHora.getTime();
+    return Math.round(diffMs / 86400000);
+  }
 
   function buscarCliente() {
     const input = document.getElementById('cedulaInput');
@@ -2128,7 +2429,14 @@ function enviarWhatsApp() {
           puntoConexion: filaEncontrada[8] ? filaEncontrada[8].v : null
         };
 
-        mostrarResultado(cliente, cedula);
+        // Recordamos la cédula en este navegador para que la próxima visita sea más rápida
+        try { localStorage.setItem('mce_ultima_cedula', cedula); } catch (e) { /* se ignora si no hay almacenamiento */ }
+
+        // El historial de pagos es un "extra": si falla o la hoja de Pagos aún
+        // no existe, igual mostramos los datos del cliente sin romper la consulta.
+        obtenerHistorialPagos(cedula)
+          .catch(() => [])
+          .then(historial => mostrarResultado(cliente, cedula, historial));
       })
       .catch(err => {
         console.error(err);
@@ -2138,11 +2446,34 @@ function enviarWhatsApp() {
       });
   }
 
-  function mostrarResultado(cliente, cedula) {
+  function mostrarResultado(cliente, cedula, historial) {
+    historial = historial || [];
     const estado = cliente.estado || '';
-    const esActivo = estado.toLowerCase().includes('activo') || estado.toLowerCase().includes('dia') || estado.toLowerCase().includes('día');
-    const estadoClass = esActivo ? 'activo' : 'suspendido';
-    const waMsg = encodeURIComponent("Hola MCE Comunicaciones! Consulté mi estado con la cédula " + cedula + ". Requiero soporte.");
+    const estadoLower = estado.toLowerCase();
+    let esActivo = estadoLower.includes('activo') || estadoLower.includes('dia') || estadoLower.includes('día');
+    let esSuspendido = estadoLower.includes('suspend') || estadoLower.includes('mora') || estadoLower.includes('vencid');
+
+    // Si logramos calcular los días hasta el vencimiento, afinamos el estado
+    // visual (por ejemplo "al día" pero que vence en 2 días => "por vencer").
+    const dias = calcularDiasVencimiento(cliente.fecha);
+    let estadoClass = esSuspendido ? 'suspendido' : (esActivo ? 'activo' : 'suspendido');
+    let notaDias = '';
+    if (dias !== null && !esSuspendido) {
+      if (dias < 0) { estadoClass = 'suspendido'; notaDias = `Venció hace ${Math.abs(dias)} día(s)`; }
+      else if (dias <= 3) { estadoClass = 'porvencer'; notaDias = dias === 0 ? 'Vence hoy' : `Vence en ${dias} día(s)`; }
+      else { notaDias = `Vence en ${dias} día(s)`; }
+    }
+
+    const waMsgPago = encodeURIComponent("Hola MCE Comunicaciones! Consulté mi estado con la cédula " + cedula + ". Voy a reportar un pago.");
+    const waMsgFalla = encodeURIComponent("Hola MCE Comunicaciones! Soy el cliente con cédula " + cedula + " (" + cliente.nombre + "). Tengo una falla o problema con mi servicio y necesito soporte técnico.");
+
+    const filasHistorial = historial.length ? historial.map(p => `
+          <tr>
+            <td>${p.periodo || '—'}</td>
+            <td>${p.fecha || '—'}</td>
+            <td>${p.valor || '—'}</td>
+            <td>${p.formaPago || '—'}</td>
+          </tr>`).join('') : '';
 
     document.getElementById('gestionResult').innerHTML = `
       <div class="gestion-result-card">
@@ -2164,6 +2495,7 @@ function enviarWhatsApp() {
             <div class="gestion-info-label">Estado del Servicio</div>
             <div class="gestion-info-value">
               <span class="gestion-status-badge ${estadoClass}">${estado || 'ACTIVO'}</span>
+              ${notaDias ? `<div class="gestion-dias-nota">${notaDias}</div>` : ''}
             </div>
           </div>
           <div class="gestion-info-item">
@@ -2186,9 +2518,21 @@ function enviarWhatsApp() {
             </div>
           </div>` : ''}
         </div>
-        
+
+        ${historial.length ? `
+        <div class="gestion-historial">
+          <div class="gestion-historial-title">🧾 Últimos pagos registrados</div>
+          <table class="gestion-historial-table">
+            <thead><tr><th>Periodo</th><th>Fecha</th><th>Valor</th><th>Forma de pago</th></tr></thead>
+            <tbody>${filasHistorial}</tbody>
+          </table>
+        </div>` : ''}
+
         <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; margin-top: 15px; font-size: 0.8rem; color: #94a3b8; line-height: 1.4;">
-          📌 <strong>Recaudo Digital:</strong> Recuerda reportar tus pagos a través de canales digitales. MCE opera bajo un modelo exclusivo por Nequi y Daviplata 3138342442. No se recibe efectivo.
+          📌 <strong>Recaudo Digital:</strong> Recuerda reportar tus pagos a través de canales digitales. MCE opera bajo un modelo exclusivo por Nequi y Daviplata
+          <strong style="color:#cbd5e1;">313 834 2442</strong>.
+          <button type="button" class="gestion-copy-btn" onclick="copiarTexto('3138342442')">📋 Copiar número</button>
+          No se recibe efectivo.
         </div>
 
         ${cliente.recibo && cliente.recibo.toString().trim().startsWith('http') ? `
@@ -2197,11 +2541,29 @@ function enviarWhatsApp() {
         </a>
         ` : ''}
 
-        <a href="https://wa.me/573241100037?text=${waMsg}" target="_blank" class="gestion-whatsapp-btn" style="margin-top: 15px;">
-          💬 Reportar Pago / WhatsApp
-        </a>
+        <div class="gestion-actions">
+          <a href="https://wa.me/573241100037?text=${waMsgPago}" target="_blank" class="gestion-whatsapp-btn">
+            💬 Reportar Pago
+          </a>
+          <a href="https://wa.me/573241100037?text=${waMsgFalla}" target="_blank" class="gestion-whatsapp-btn gestion-support-btn">
+            🛠️ Reportar Falla / Soporte
+          </a>
+        </div>
+      </div>
+      <div class="gestion-remember">
+        <button type="button" onclick="cambiarCedula()">¿No eres tú? Buscar otra cédula</button>
       </div>`;
     document.getElementById('gestionResult').classList.add('visible');
+  }
+
+  /* Limpia la cédula guardada y el campo de búsqueda, para que otra persona
+     pueda consultar su propio estado desde el mismo dispositivo */
+  function cambiarCedula() {
+    try { localStorage.removeItem('mce_ultima_cedula'); } catch (e) { /* se ignora */ }
+    const input = document.getElementById('cedulaInput');
+    if (input) { input.value = ''; input.focus(); }
+    document.getElementById('gestionResult').classList.remove('visible');
+    document.getElementById('gestionResult').innerHTML = '';
   }
 
   function mostrarError(msg) {
