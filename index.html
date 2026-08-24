@@ -2285,7 +2285,7 @@
       <div class="contact-icon-wrap">📧</div>
       <div>
         <div class="contact-label">Correo Electrónico</div>
-        <div class="contact-value">mcecomunicaciones2025</div>
+        <div class="contact-value">mc2025comunicaciones</div>
         <div class="contact-note">@gmail.com</div>
       </div>
     </a>
@@ -2495,7 +2495,7 @@ function enviarWhatsApp() {
       <li><a href="#nosotros" onclick="showSection('nosotros');return false;">Nosotros</a></li>
       <li><a href="#contacto" onclick="showSection('contacto');return false;">Contacto</a></li>
       <li><a href="#gestion" onclick="showSection('gestion');return false;">Gestión Cliente</a></li>
-      <li><a href="mailto:mc2025comunicaciones@gmail.com">mcecomunicaciones2025@gmail.com</a></li>
+      <li><a href="mailto:mc2025comunicaciones@gmail.com">mc2025comunicaciones@gmail.com</a></li>
     </ul>
   </div>
   <div class="footer-bottom">
@@ -2707,10 +2707,55 @@ function enviarWhatsApp() {
       id: 'chiste',
       keywords: ['cuentame un chiste', 'hazme reir', 'dime un chiste'],
       respuesta: '😄 No soy muy bueno con los chistes, pero te aseguro que nuestras megas dedicadas sí son en serio. ¿Te ayudo con algo de tu servicio?'
+    },
+    {
+      id: 'como_estas',
+      keywords: ['como estas', 'como andas', 'que tal', 'como te va', 'todo bien contigo', 'que mas'],
+      respuesta: '¡Muy bien, gracias por preguntar! 😊 Aquí atento para ayudarte con lo que necesites de tu servicio. ¿En qué te colaboro?'
+    },
+    {
+      id: 'despedida',
+      keywords: ['adios', 'hasta luego', 'nos vemos', 'chao', 'bye', 'hasta pronto'],
+      respuesta: '¡Hasta pronto! 👋 Si necesitas algo más, aquí voy a estar.'
+    },
+    {
+      id: 'estado_servicio',
+      keywords: [
+        'que pasa con el servicio', 'que pasa con internet', 'que pasa con la internet', 'que esta pasando',
+        'hay fallas', 'hay una falla', 'hay mantenimiento', 'hay algun problema', 'hay algun aviso',
+        'algun aviso', 'avisos activos', 'problemas en la zona', 'servicio normal', 'todo bien con el servicio',
+        'reportan algo', 'hay corte', 'hay novedades', 'estado del servicio', 'estado general del servicio',
+        'que pasa'
+      ],
+      dinamico: true,
+      resolver: resolverEstadoServicioAsistente
     }
   ];
 
   const RESPUESTA_FALLBACK_ASISTENTE = 'No estoy seguro de haber entendido bien tu pregunta 🤔. Puedes intentar con otras palabras, revisar el <a href="#ayuda" onclick="showSection(\'ayuda\');toggleAssistant(false);return false;">Centro de Ayuda</a>, o hablar directo con un asesor por WhatsApp. 👇';
+
+  /* Respuesta dinámica: revisa los avisos vigentes (los mismos que se leen
+     para el banner) y arma una respuesta detallada. Si el cliente menciona
+     su vereda/zona en la pregunta y coincide con la de algún aviso, prioriza
+     ese aviso puntual; si no, muestra todos los que estén activos. */
+  function resolverEstadoServicioAsistente(preguntaOriginal) {
+    return obtenerAvisosVigentes().then(avisos => {
+      if (!avisos || avisos.length === 0) {
+        return '✅ Por ahora no tenemos reportado ningún mantenimiento ni falla masiva. El servicio debería estar funcionando con normalidad. Si tú sí estás teniendo problemas puntuales, revisa la <a href="#ayuda" onclick="showSection(\'ayuda\');toggleAssistant(false);return false;">Guía de Soporte</a> o cuéntame qué te está pasando y te ayudo a diagnosticarlo.';
+      }
+      const textoPregunta = normalizarTextoAsistente(preguntaOriginal);
+      const coincidencia = avisos.find(a => a.zona && textoPregunta.indexOf(normalizarTextoAsistente(a.zona)) !== -1);
+      const paraMostrar = coincidencia ? [coincidencia] : avisos;
+      const detalle = paraMostrar.map(a => {
+        const est = estiloTipoAviso(a.tipo);
+        return `${est.icono} <strong>${est.etiqueta}</strong>${a.zona ? ' — ' + a.zona : ''}<br>${a.titulo}. ${a.mensaje}`;
+      }).join('<br><br>');
+      let intro;
+      if (coincidencia) intro = 'Sí, encontré un aviso relacionado con tu zona:';
+      else intro = avisos.length === 1 ? 'Sí, tenemos un aviso activo en este momento:' : `Sí, tenemos ${avisos.length} avisos activos en este momento:`;
+      return intro + '<br><br>' + detalle;
+    });
+  }
 
   /* Quita tildes/mayúsculas y dejar solo letras/números/espacios, para comparar sin importar acentos */
   function normalizarTextoAsistente(txt) {
@@ -2724,7 +2769,7 @@ function enviarWhatsApp() {
 
   /* Busca la entrada de la base de conocimiento que mejor coincide con la
      pregunta: las frases completas (2+ palabras) pesan más que palabras sueltas */
-  function buscarRespuestaAsistente(pregunta) {
+  function buscarEntradaAsistente(pregunta) {
     const texto = normalizarTextoAsistente(pregunta);
     if (!texto) return null;
     let mejor = null, mejorPuntaje = 0;
@@ -2740,7 +2785,20 @@ function enviarWhatsApp() {
       });
       if (puntaje > mejorPuntaje) { mejorPuntaje = puntaje; mejor = entrada; }
     });
-    return mejor ? mejor.respuesta : null;
+    return mejor;
+  }
+
+  /* Obtiene la respuesta a mostrar (siempre como Promise, aunque la mayoría
+     de respuestas son fijas): si la entrada encontrada es "dinámica" (como
+     el estado del servicio, que depende de los avisos vigentes en ese
+     momento), llama a su función resolutora; si no, devuelve el texto fijo. */
+  function obtenerRespuestaAsistente(pregunta) {
+    const entrada = buscarEntradaAsistente(pregunta);
+    if (!entrada) return Promise.resolve(null);
+    if (entrada.dinamico && typeof entrada.resolver === 'function') {
+      return Promise.resolve(entrada.resolver(pregunta));
+    }
+    return Promise.resolve(entrada.respuesta);
   }
 
   /* Hace scroll hasta el final de la conversación. Se apoya en requestAnimationFrame
@@ -2789,8 +2847,8 @@ function enviarWhatsApp() {
       ['💰 ¿Cómo pago?', '¿Cómo pago mi factura?'],
       ['📶 Ver planes', '¿Qué planes tienen?'],
       ['🛠️ No tengo internet', 'no tengo internet'],
-      ['📍 ¿Hay cobertura en mi zona?', '¿Tienen cobertura en mi vereda?'],
-      ['🤖 ¿Quién te creó?', '¿Quién te creó?']
+      ['⚠️ ¿Hay fallas reportadas?', '¿Qué pasa con el servicio?'],
+      ['📍 ¿Hay cobertura en mi zona?', '¿Tienen cobertura en mi vereda?']
     ];
     cont.innerHTML = sugerencias.map(s => `<button type="button" class="assistant-chip" onclick="preguntaRapidaAsistente('${s[1].replace(/'/g, "\\'")}')">${s[0]}</button>`).join('') +
       `<button type="button" class="assistant-chip" onclick="window.open('https://wa.me/${WA_NUMERO_ASISTENTE}','_blank')">🙋 Hablar con un asesor</button>`;
@@ -2823,11 +2881,17 @@ function enviarWhatsApp() {
     const chips = document.getElementById('assistantQuick');
     if (chips) chips.classList.add('hidden');
     mostrarEscribiendoAsistente();
-    setTimeout(() => {
-      ocultarEscribiendoAsistente();
-      const respuesta = buscarRespuestaAsistente(texto);
-      agregarMensajeAsistente(respuesta || RESPUESTA_FALLBACK_ASISTENTE, 'bot');
-    }, 550 + Math.random() * 350);
+    const inicioEspera = Date.now();
+    obtenerRespuestaAsistente(texto).then(respuesta => {
+      // Respeta un mínimo de "tiempo escribiendo" para que se sienta natural,
+      // aunque la respuesta (por ejemplo, la de avisos) haya llegado antes.
+      const esperaMinima = 550 + Math.random() * 350;
+      const faltante = Math.max(0, esperaMinima - (Date.now() - inicioEspera));
+      setTimeout(() => {
+        ocultarEscribiendoAsistente();
+        agregarMensajeAsistente(respuesta || RESPUESTA_FALLBACK_ASISTENTE, 'bot');
+      }, faltante);
+    });
   }
 
   /* Abre/cierra el panel del asistente. Al abrirlo por primera vez muestra
@@ -2857,8 +2921,9 @@ function enviarWhatsApp() {
 
   /* ===================== AVISOS Y MANTENIMIENTOS =====================
      Lee la pestaña "Avisos" de la misma Hoja de Google (la administras
-     desde el panel, sección Avisos) y muestra el más relevante que esté
-     vigente en un banner debajo del menú. Si no hay ninguno, no se ve nada. */
+     desde el panel, sección Avisos). Esta misma información alimenta dos
+     cosas: el banner debajo del menú, y las respuestas del Asistente
+     Virtual cuando el cliente pregunta "¿qué pasa con el servicio?". */
   function normalizarBooleanoAviso(v) {
     const t = String(v || '').trim().toUpperCase();
     return t === 'SI' || t === 'TRUE' || t === 'SÍ' || t === '1';
@@ -2897,16 +2962,19 @@ function enviarWhatsApp() {
     return texto;
   }
 
-  function cargarAvisosVigentes() {
-    const barra = document.getElementById('avisosBar');
-    if (!barra) return;
+  /* Trae y filtra los avisos vigentes desde la Hoja de Google. Se guarda en
+     caché (avisosVigentesCache) para que el asistente pueda responder al
+     instante si ya se consultó antes (por ejemplo, al cargar la página para
+     el banner), sin tener que esperar una nueva consulta a internet. */
+  let avisosVigentesCache = null;
+  function obtenerAvisosVigentes() {
     const urlAvisos = 'https://docs.google.com/spreadsheets/d/' + SPREADSHEET_ID + '/gviz/tq?sheet=Avisos&t=' + Date.now();
-    fetch(urlAvisos)
+    return fetch(urlAvisos)
       .then(r => { if (!r.ok) throw new Error('sin avisos'); return r.text(); })
       .then(texto => {
         const inicio = texto.indexOf('{');
         const fin = texto.lastIndexOf('}');
-        if (inicio === -1 || fin === -1) return;
+        if (inicio === -1 || fin === -1) { avisosVigentesCache = []; return []; }
         const datos = JSON.parse(texto.substring(inicio, fin + 1));
         const filas = (datos.table && datos.table.rows) ? datos.table.rows : [];
         // Columnas: id(0), titulo(1), mensaje(2), tipo(3), zona(4), fechaInicio(5), fechaFin(6), activo(7)
@@ -2920,31 +2988,38 @@ function enviarWhatsApp() {
           };
         }).filter(Boolean).filter(avisoPublicoEsVigente);
 
-        if (avisos.length === 0) return;
-
-        // Prioridad: falla > mantenimiento > info; entre iguales, el más reciente.
-        // Se muestran TODOS los avisos vigentes (no solo el primero).
+        // Prioridad: falla > mantenimiento > info; entre iguales, el más reciente
         const peso = { falla: 3, mantenimiento: 2, info: 1 };
         avisos.sort((a, b) => (peso[b.tipo] || 0) - (peso[a.tipo] || 0) || String(b.fechaInicio).localeCompare(String(a.fechaInicio)));
-
-        const tarjetas = avisos.map(aviso => {
-          const est = estiloTipoAviso(aviso.tipo);
-          return `
-          <div class="avisos-bar-item ${est.clase}">
-            <div class="avisos-bar-icon">${est.icono}</div>
-            <div class="avisos-bar-text">
-              <div class="avisos-bar-tag">${est.etiqueta}${aviso.zona ? ' · ' + aviso.zona : ''}</div>
-              <div class="avisos-bar-title">${aviso.titulo}</div>
-              <div class="avisos-bar-msg">${aviso.mensaje}</div>
-            </div>
-            <button type="button" class="avisos-bar-close" onclick="cerrarAvisoBar(this)" aria-label="Cerrar aviso">✕</button>
-          </div>`;
-        }).join('');
-
-        barra.className = 'avisos-bar visible';
-        barra.innerHTML = `<div class="avisos-bar-list" id="avisosBarList">${tarjetas}</div>`;
+        avisosVigentesCache = avisos;
+        return avisos;
       })
-      .catch(() => { /* si la pestaña "Avisos" aún no existe, simplemente no se muestra nada */ });
+      .catch(() => { avisosVigentesCache = avisosVigentesCache || []; return avisosVigentesCache; });
+  }
+
+  function cargarAvisosVigentes() {
+    const barra = document.getElementById('avisosBar');
+    if (!barra) return;
+    obtenerAvisosVigentes().then(avisos => {
+      if (!avisos || avisos.length === 0) return;
+
+      const tarjetas = avisos.map(aviso => {
+        const est = estiloTipoAviso(aviso.tipo);
+        return `
+        <div class="avisos-bar-item ${est.clase}">
+          <div class="avisos-bar-icon">${est.icono}</div>
+          <div class="avisos-bar-text">
+            <div class="avisos-bar-tag">${est.etiqueta}${aviso.zona ? ' · ' + aviso.zona : ''}</div>
+            <div class="avisos-bar-title">${aviso.titulo}</div>
+            <div class="avisos-bar-msg">${aviso.mensaje}</div>
+          </div>
+          <button type="button" class="avisos-bar-close" onclick="cerrarAvisoBar(this)" aria-label="Cerrar aviso">✕</button>
+        </div>`;
+      }).join('');
+
+      barra.className = 'avisos-bar visible';
+      barra.innerHTML = `<div class="avisos-bar-list" id="avisosBarList">${tarjetas}</div>`;
+    });
   }
 
   /* Cerrar un aviso solo lo oculta mientras el cliente sigue viendo esta
