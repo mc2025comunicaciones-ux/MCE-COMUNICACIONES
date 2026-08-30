@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MCE COMUNICACIONES - Internet De Calidad</title>
@@ -2398,6 +2400,64 @@
 </section>
 
 <script>
+/* ===================== FIREBASE (CONSULTA EN TIEMPO REAL) ===================== */
+const firebaseConfig = {
+  apiKey: "AIzaSyCDliQTfR4Fj7b_p_0XVwz4KJUEcJoEL2A",
+  authDomain: "mce--comunicaciones.firebaseapp.com",
+  databaseURL: "https://mce--comunicaciones-default-rtdb.firebaseio.com",
+  projectId: "mce--comunicaciones",
+  storageBucket: "mce--comunicaciones.firebasestorage.app",
+  messagingSenderId: "641911832079",
+  appId: "1:641911832079:web:227a820a7829bb1d08ad7a"
+};
+firebase.initializeApp(firebaseConfig);
+const fbDB = firebase.database();
+
+function normalizarCedulaTexto(v){
+  return (v || '').toString().trim().replace(/[.,\s]/g, '');
+}
+
+// Busca un cliente por cédula directamente en Firebase (lo que escribe el panel
+// de Administración). Devuelve null si Firebase no tiene datos o no lo encuentra,
+// para que el buscador pueda recurrir a la Hoja de cálculo como respaldo.
+function fbBuscarCliente(cedula){
+  return fbDB.ref('clientes').once('value').then(function(snap){
+    const lista = snap.val();
+    if(!Array.isArray(lista) || !lista.length) return null;
+    const c = lista.find(function(x){ return x && normalizarCedulaTexto(x.cedula) === cedula; });
+    if(!c) return null;
+    return {
+      id: c.id,
+      nombre: c.nombre || 'Usuario MCE',
+      plan: c.planNombre || 'Plan Contratado',
+      estado: c.estado || 'ACTIVO',
+      fecha: c.fechaVencimiento || '—',
+      valor: (c.precio || c.precio === 0) ? ('$' + Number(c.precio).toLocaleString('es-CO')) : '—',
+      vereda: c.vereda || 'No especificada',
+      recibo: null,
+      puntoConexion: c.puntoConexion || null
+    };
+  }).catch(function(err){ console.warn('Firebase no disponible, se usará la Hoja como respaldo:', err); return null; });
+}
+
+// Trae el historial de pagos de un cliente directamente desde Firebase.
+function fbObtenerHistorialPagos(clienteId){
+  return fbDB.ref('pagos').once('value').then(function(snap){
+    const lista = snap.val();
+    if(!Array.isArray(lista)) return [];
+    const propios = lista.filter(function(p){ return p && p.clienteId === clienteId; });
+    propios.sort(function(a,b){ return new Date(a.fecha) - new Date(b.fecha); });
+    return propios.reverse().slice(0, 6).map(function(p){
+      return {
+        periodo: p.periodo || '—',
+        fecha: p.fecha ? new Date(p.fecha).toLocaleDateString('es-CO') : '—',
+        valor: (p.valor || p.valor === 0) ? ('$' + Number(p.valor).toLocaleString('es-CO')) : '—',
+        formaPago: p.formaPago || ''
+      };
+    });
+  }).catch(function(){ return []; });
+}
+
 function enviarWhatsApp() {
   const nombre = document.getElementById('wa-nombre').value.trim();
   const municipio = document.getElementById('wa-municipio').value.trim();
@@ -3226,6 +3286,24 @@ function enviarWhatsApp() {
     loadingDiv.classList.add('visible');
     if (btn) btn.disabled = true;
 
+    // Primero intentamos Firebase (datos en vivo, tal cual los ve el panel de
+    // Administración en este instante). Si no está disponible o el cliente aún
+    // no está migrado allí, caemos de vuelta a la Hoja de cálculo de siempre.
+    fbBuscarCliente(cedula).then(function(clienteFb){
+      if (clienteFb) {
+        loadingDiv.classList.remove('visible');
+        if (btn) btn.disabled = false;
+        try { localStorage.setItem('mce_ultima_cedula', cedula); } catch (e) {}
+        fbObtenerHistorialPagos(clienteFb.id)
+          .catch(function(){ return []; })
+          .then(function(historial){ mostrarResultado(clienteFb, cedula, historial); });
+        return;
+      }
+      buscarClienteEnHoja(cedula, inputRaw, resultDiv, loadingDiv, btn);
+    });
+  }
+
+  function buscarClienteEnHoja(cedula, inputRaw, resultDiv, loadingDiv, btn) {
     // Usamos el endpoint gviz/tq público de Google que no tiene restricciones CORS agresivas si el documento está compartido como lector
     const urlApi = 'https://docs.google.com/spreadsheets/d/' + SPREADSHEET_ID + '/gviz/tq?t=' + Date.now();
 
