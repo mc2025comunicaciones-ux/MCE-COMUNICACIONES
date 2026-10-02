@@ -1914,9 +1914,9 @@ a.gestion-whatsapp-btn[style*="linear-gradient"]{background:#fff!important;color
 .gestion-spinner{border-color:var(--line)!important;border-top-color:var(--ink)!important}
 
 
-.gestion-recibo-btn{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:16px;padding:13px 18px;border-radius:999px;background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8!important;font-size:.92rem;font-weight:500;text-decoration:none;transition:all .2s}
-.gestion-recibo-btn::before{content:"↓";font-weight:600}
-.gestion-recibo-btn:hover{background:#dbeafe;border-color:#1d4ed8}
+.gestion-estado-row{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap}
+.gestion-recibo-icon{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8!important;text-decoration:none;transition:all .2s}
+.gestion-recibo-icon:hover{background:#1d4ed8;border-color:#1d4ed8;color:#fff!important}
 
 /* AVISOS */
 .avisos-bar-item{background:#fff!important;border:1px solid var(--line)!important;border-left:3px solid var(--acc)!important;border-radius:12px!important;box-shadow:0 4px 16px rgba(15,23,42,.06)!important}
@@ -3715,7 +3715,7 @@ function enviarWhatsApp() {
           <div class="gestion-info-item">
             <div class="gestion-info-label">Estado del Servicio</div>
             <div class="gestion-info-value">
-              <span class="gestion-status-badge ${estadoClass}">${estado || 'ACTIVO'}</span>
+              <span class="gestion-estado-row"><span class="gestion-status-badge ${estadoClass}">${estado || 'ACTIVO'}</span>${(function(u){ return u ? '<a href="' + u + '" target="_blank" rel="noopener" class="gestion-recibo-icon" title="Descargar recibo" aria-label="Descargar recibo"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg></a>' : ''; })(urlReciboDescarga(cliente.recibo))}</span>
               ${notaDias ? `<div class="gestion-dias-nota">${notaDias}</div>` : ''}
             </div>
           </div>
@@ -3756,7 +3756,7 @@ function enviarWhatsApp() {
           No se recibe efectivo.
         </div>
 
-        ${(function(u){ return u ? '<a href="' + u + '" target="_blank" rel="noopener" class="gestion-recibo-btn">Descargar último recibo (PDF)</a>' : ''; })(urlReciboDescarga(cliente.recibo))}
+        
 
         <div class="gestion-actions">
           <a href="https://wa.me/573241100037?text=${waMsgPago}" target="_blank" class="gestion-whatsapp-btn">
