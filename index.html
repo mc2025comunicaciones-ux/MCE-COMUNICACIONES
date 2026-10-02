@@ -2682,6 +2682,29 @@ function fbReciboUrl(c){
   return null;
 }
 
+
+function obtenerReciboHoja(cedula){
+  return fetch('https://docs.google.com/spreadsheets/d/' + SPREADSHEET_ID + '/gviz/tq?t=' + Date.now())
+    .then(function(r){ return r.text(); })
+    .then(function(t){
+      var a = t.indexOf('{'), b = t.lastIndexOf('}');
+      if (a < 0 || b < 0) return null;
+      var filas = JSON.parse(t.substring(a, b + 1)).table.rows || [];
+      for (var i = 0; i < filas.length; i++) {
+        var c = filas[i].c && filas[i].c[1];
+        if (!c) continue;
+        var v = (c.v != null ? String(c.v) : '').trim().replace(/[.,\s]/g, '');
+        var f = (c.f != null ? String(c.f) : '').trim().replace(/[.,\s]/g, '');
+        if (v === cedula || f === cedula) {
+          var h = filas[i].c[7];
+          return (h && h.v && urlReciboDescarga(h.v)) ? String(h.v).trim() : null;
+        }
+      }
+      return null;
+    })
+    .catch(function(){ return null; });
+}
+
 function fbBuscarCliente(cedula){
   return fbDB.ref('clientes').once('value').then(function(snap){
     const lista = snap.val();
@@ -3556,9 +3579,12 @@ function enviarWhatsApp() {
         loadingDiv.classList.remove('visible');
         if (btn) btn.disabled = false;
         try { localStorage.setItem('mce_ultima_cedula', cedula); } catch (e) {}
-        fbObtenerHistorialPagos(clienteFb.id)
-          .catch(function(){ return []; })
-          .then(function(historial){ mostrarResultado(clienteFb, cedula, historial); });
+        var pReciboHoja = clienteFb.recibo ? Promise.resolve(null) : obtenerReciboHoja(cedula);
+        Promise.all([fbObtenerHistorialPagos(clienteFb.id).catch(function(){ return []; }), pReciboHoja])
+          .then(function(r){
+            if (!clienteFb.recibo && r[1]) clienteFb.recibo = r[1];
+            mostrarResultado(clienteFb, cedula, r[0]);
+          });
         return;
       }
       buscarClienteEnHoja(cedula, inputRaw, resultDiv, loadingDiv, btn);
