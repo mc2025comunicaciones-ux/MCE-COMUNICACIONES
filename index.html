@@ -1914,7 +1914,7 @@ a.gestion-whatsapp-btn[style*="linear-gradient"]{background:#fff!important;color
 .gestion-spinner{border-color:var(--line)!important;border-top-color:var(--ink)!important}
 
 
-.gestion-estado-row{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap}
+.gestion-recibo-cell{width:48px;text-align:right}
 .gestion-recibo-icon{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8!important;text-decoration:none;transition:all .2s}
 .gestion-recibo-icon:hover{background:#1d4ed8;border-color:#1d4ed8;color:#fff!important}
 
@@ -3688,12 +3688,14 @@ function enviarWhatsApp() {
     const waMsgPago = encodeURIComponent("Hola MCE Comunicaciones! Consulté mi estado con la cédula " + cedula + ". Voy a reportar un pago.");
     const waMsgFalla = encodeURIComponent("Hola MCE Comunicaciones! Soy el cliente con cédula " + cedula + " (" + cliente.nombre + "). Tengo una falla o problema con mi servicio y necesito soporte técnico.");
 
-    const filasHistorial = historial.length ? historial.map(p => `
+    const iconoRecibo = (function(u){ return u ? '<a href="' + u + '" target="_blank" rel="noopener" class="gestion-recibo-icon" title="Descargar recibo" aria-label="Descargar recibo"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg></a>' : ''; })(urlReciboDescarga(cliente.recibo));
+    const filasHistorial = historial.length ? historial.map((p, idx) => `
           <tr>
             <td>${p.periodo || '—'}</td>
             <td>${p.fecha || '—'}</td>
             <td>${p.valor || '—'}</td>
             <td>${p.formaPago || '—'}</td>
+            <td class="gestion-recibo-cell">${idx === 0 ? iconoRecibo : ''}</td>
           </tr>`).join('') : '';
 
     document.getElementById('gestionResult').innerHTML = `
@@ -3715,7 +3717,7 @@ function enviarWhatsApp() {
           <div class="gestion-info-item">
             <div class="gestion-info-label">Estado del Servicio</div>
             <div class="gestion-info-value">
-              <span class="gestion-estado-row"><span class="gestion-status-badge ${estadoClass}">${estado || 'ACTIVO'}</span>${(function(u){ return u ? '<a href="' + u + '" target="_blank" rel="noopener" class="gestion-recibo-icon" title="Descargar recibo" aria-label="Descargar recibo"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg></a>' : ''; })(urlReciboDescarga(cliente.recibo))}</span>
+              <span class="gestion-status-badge ${estadoClass}">${estado || 'ACTIVO'}</span>
               ${notaDias ? `<div class="gestion-dias-nota">${notaDias}</div>` : ''}
             </div>
           </div>
@@ -3744,7 +3746,7 @@ function enviarWhatsApp() {
         <div class="gestion-historial">
           <div class="gestion-historial-title">Últimos pagos registrados</div>
           <table class="gestion-historial-table">
-            <thead><tr><th>Periodo</th><th>Fecha</th><th>Valor</th><th>Forma de pago</th></tr></thead>
+            <thead><tr><th>Periodo</th><th>Fecha</th><th>Valor</th><th>Forma de pago</th><th></th></tr></thead>
             <tbody>${filasHistorial}</tbody>
           </table>
         </div>` : ''}
