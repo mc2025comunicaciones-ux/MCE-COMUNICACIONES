@@ -1721,8 +1721,8 @@
 
 /* ═════════ REDISEÑO MINIMALISTA ═════════ */
 :root{
-  --ink:#0f172a; --mute:#64748b; --soft:#94a3b8; --line:#e7e5e4; --bg:#fafaf9; --acc:#2563eb; --paper:#fff;
-  --white:#0f172a; --dark-bg:#fafaf9; --text-muted:#64748b; --blue-light:#64748b; --blue-glow:#2563eb;
+  --ink:#05070d; --mute:#334155; --soft:#64748b; --line:#e7e5e4; --bg:#fafaf9; --acc:#2563eb; --paper:#fff;
+  --white:#05070d; --dark-bg:#fafaf9; --text-muted:#64748b; --blue-light:#64748b; --blue-glow:#2563eb;
   --card-bg:#fff; --card-border:#e7e5e4;
 }
 html,body{background:var(--bg)!important}
@@ -1913,6 +1913,11 @@ a.gestion-whatsapp-btn[style*="linear-gradient"]{background:#fff!important;color
 .gestion-remember button{color:var(--mute)!important;font-size:.84rem;text-decoration:underline;background:none!important;border:none!important}
 .gestion-spinner{border-color:var(--line)!important;border-top-color:var(--ink)!important}
 
+
+.gestion-recibo-btn{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:16px;padding:13px 18px;border-radius:999px;background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8!important;font-size:.92rem;font-weight:500;text-decoration:none;transition:all .2s}
+.gestion-recibo-btn::before{content:"↓";font-weight:600}
+.gestion-recibo-btn:hover{background:#dbeafe;border-color:#1d4ed8}
+
 /* AVISOS */
 .avisos-bar-item{background:#fff!important;border:1px solid var(--line)!important;border-left:3px solid var(--acc)!important;border-radius:12px!important;box-shadow:0 4px 16px rgba(15,23,42,.06)!important}
 .avisos-bar-item.tipo-mantenimiento{border-left-color:#f59e0b!important}
@@ -2032,7 +2037,7 @@ footer{background:transparent!important;border-top:1px solid var(--line)!importa
     <p class="hero-sub">Internet De Calidad</p>
     <p class="hero-desc">
       Llevamos conectividad real a las zonas rurales de Saladoblanco y Oporapa.
-      Megas de Calidad con la estabilidad que tu hogar y negocio necesitan.
+      Megas dedicadas, sin compartir, con la estabilidad que tu hogar y negocio necesitan.
     </p>
     <div class="hero-actions">
       <a href="#planes" class="btn-primary" onclick="showSection('planes');return false;">Ver planes</a>
@@ -2120,8 +2125,8 @@ footer{background:transparent!important;border-top:1px solid var(--line)!importa
       <div class="plan-unit">MBPS</div>
       <div class="plan-type">Plan Básico</div>
       <ul class="plan-features">
-        <li>Buen rendimiento </li>
-        <li>Ideal para hogar</li>
+        <li>Velocidad y Eficiencia </li>
+        <li>Ideal para hogar y trabajo remoto</li>
         <li>Navegación, cámaras, videollamadas y streaming</li>
         <li>Soporte técnico incluido</li>
       </ul>
@@ -2135,10 +2140,10 @@ footer{background:transparent!important;border-top:1px solid var(--line)!importa
       <div class="plan-unit">MBPS</div>
       <div class="plan-type">Plan Essential</div>
       <ul class="plan-features">
-        <li>Buen rendimiento</li>
-        <li>Ideal para el hogar</li>
-        <li>Cámaras,navegacion,streaming y videollamadas</li>
-        <li>Soporte técnico incluido</li>
+        <li>Máximo rendimiento</li>
+        <li>Ideal para negocios y múltiples usuarios</li>
+        <li>Streaming 4K, cámaras, videojuegos y trabajo</li>
+        <li>Soporte técnico prioritario</li>
       </ul>
       <a href="#contacto" class="plan-cta">Contratar este Plan</a>
     </div>
@@ -2149,11 +2154,10 @@ footer{background:transparent!important;border-top:1px solid var(--line)!importa
       <div class="plan-unit">MBPS</div>
       <div class="plan-type">Plan Advance</div>
       <ul class="plan-features">
-        <li>Velocidad y Eficiencia </li>
         <li>Velocidad de hasta 20 Mbps</li>
-        <li>Ideal para hogar y trabajo remoto </li>
-        <li>Navegación, cámaras, videollamadas,videojuegos y streaming 4K</li>
-        <li>Soporte técnico prioritario</li>
+        <li>Ideal para hogar y trabajo </li>
+        <li>Navegación, cámaras, videollamadas y streaming</li>
+        <li>Soporte técnico incluido</li>
       </ul>
       <a href="#contacto" class="plan-cta">Contratar este Plan</a>
     </div>
@@ -2165,11 +2169,12 @@ footer{background:transparent!important;border-top:1px solid var(--line)!importa
       <div class="plan-unit">MBPS</div>
       <div class="plan-type">Plan Supreme</div>
       <ul class="plan-features">
-        <li>Máximo Rendimiento,Velocidad y Eficiencia</li>
-        <li>Streaming 4K, cámaras, videojuegos,videollamadas y navegación</li>
-       <li>Velocidad de hasta 30 Mbps</li>
-        <li>Ideal para hogar,trabajo remoto y negocio con multiples dispositivos </li>
+        <li>Máximo rendimiento</li>
+        <li>Streaming 4K, cámaras, videojuegos y trabajo</li>
         <li>Soporte técnico prioritario</li>
+       <li>Velocidad de hasta 30 Mbps</li>
+        <li>Ideal para hogar y trabajo con multiples dispositivos </li>
+        <li>Soporte técnico incluido</li>
       </ul>
       <a href="#contacto" class="plan-cta">Contratar este Plan</a>
     </div>
@@ -2660,6 +2665,23 @@ function normalizarCedulaTexto(v){
 // Busca un cliente por cédula directamente en Firebase (lo que escribe el panel
 // de Administración). Devuelve null si Firebase no tiene datos o no lo encuentra,
 // para que el buscador pueda recurrir a la Hoja de cálculo como respaldo.
+
+// Devuelve una URL de descarga válida o '' si no hay recibo cargado.
+function urlReciboDescarga(v){
+  if (v === null || v === undefined) return '';
+  var u = v.toString().trim();
+  if (!/^https?:\/\//i.test(u)) return '';
+  var m = u.match(/drive\.google\.com\/file\/d\/([^\/?#]+)/) || u.match(/drive\.google\.com\/(?:open|uc)\?[^#]*id=([^&#]+)/);
+  if (m) return 'https://drive.google.com/uc?export=download&id=' + m[1];
+  return u;
+}
+// Busca en el cliente de Firebase cualquier campo cuyo nombre contenga "recibo" y tenga un enlace.
+function fbReciboUrl(c){
+  var claves = Object.keys(c || {}).filter(function(k){ return /recibo/i.test(k); });
+  for (var i = 0; i < claves.length; i++) { if (urlReciboDescarga(c[claves[i]])) return c[claves[i]]; }
+  return null;
+}
+
 function fbBuscarCliente(cedula){
   return fbDB.ref('clientes').once('value').then(function(snap){
     const lista = snap.val();
@@ -2674,7 +2696,7 @@ function fbBuscarCliente(cedula){
       fecha: c.fechaVencimiento || '—',
       valor: (c.precio || c.precio === 0) ? ('$' + Number(c.precio).toLocaleString('es-CO')) : '—',
       vereda: c.vereda || 'No especificada',
-      recibo: null,
+      recibo: fbReciboUrl(c),
       puntoConexion: c.puntoConexion || null
     };
   }).catch(function(err){ console.warn('Firebase no disponible, se usará la Hoja como respaldo:', err); return null; });
@@ -2881,7 +2903,7 @@ function enviarWhatsApp() {
     {
       id: 'planes',
       keywords: ['plan', 'planes', 'precio', 'precios', 'megas', 'mbps', 'velocidad', 'cuanto cuesta', 'contratar', 'tarifa', 'valor del plan'],
-      respuesta: 'Tenemos planes de Internet De Calidad desde 8 hasta 30 Mbps, según lo que necesites (hogar, negocio, cámaras, trabajo remoto). Puedes verlos en <a href="#planes" onclick="showSection(\'planes\');toggleAssistant(false);return false;">Nuestros Planes</a>. Los precios exactos por zona te los confirmamos por WhatsApp.'
+      respuesta: 'Tenemos planes de Internet De Calidad desde 8 hasta 20 Mbps, según lo que necesites (hogar, negocio, cámaras, trabajo remoto). Puedes verlos en <a href="#planes" onclick="showSection(\'planes\');toggleAssistant(false);return false;">Nuestros Planes</a>. Los precios exactos por zona te los confirmamos por WhatsApp.'
     },
     {
       id: 'sin_senal',
@@ -3708,11 +3730,7 @@ function enviarWhatsApp() {
           No se recibe efectivo.
         </div>
 
-        ${cliente.recibo && cliente.recibo.toString().trim().startsWith('http') ? `
-        <a href="${cliente.recibo}" target="_blank" class="gestion-whatsapp-btn" style="margin-top: 15px; background: linear-gradient(135deg, #2563eb, #1d4ed8); border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 4px 12px rgba(37,99,235,0.3); text-shadow: none;">
-          Descargar Último Recibo (PDF)
-        </a>
-        ` : ''}
+        ${(function(u){ return u ? '<a href="' + u + '" target="_blank" rel="noopener" class="gestion-recibo-btn">Descargar último recibo (PDF)</a>' : ''; })(urlReciboDescarga(cliente.recibo))}
 
         <div class="gestion-actions">
           <a href="https://wa.me/573241100037?text=${waMsgPago}" target="_blank" class="gestion-whatsapp-btn">
