@@ -5,24 +5,24 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FESCOM COMUNICACIONES - Internet De Calidad</title>
-<meta name="description" content="Internet De Calidad rural en Saladoblanco y Oporapa, Huila. Megas de calidad exclusivas para ti, soporte cercano y planes desde 8 hasta 20 Mbps.">
+<title>FESCOM COMUNICACIONES - Internet de Calidad</title>
+<meta name="description" content="Internet de Calidad rural en Saladoblanco y Oporapa, Huila. Megas de calidad exclusivas para ti, soporte cercano y planes desde 8 hasta 20 Mbps.">
 
 <!-- Vista previa al compartir en WhatsApp, Facebook, etc. (Open Graph) -->
 <!-- IMPORTANTE: reemplaza el valor de og:url por la dirección real donde publiques esta página,
      y sube el archivo fescom-logo-social.jpg junto a este index.html para que la imagen se vea. -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="FESCOM Comunicaciones">
-<meta property="og:title" content="FESCOM Comunicaciones - Internet De Calidad">
-<meta property="og:description" content="Internet De Calidad rural en Saladoblanco y Oporapa, Huila. Megas de calidad exclusivas para ti, soporte cercano y planes desde 8 hasta 20 Mbps.">
+<meta property="og:title" content="FESCOM Comunicaciones - Internet de Calidad">
+<meta property="og:description" content="Internet de Calidad rural en Saladoblanco y Oporapa, Huila. Megas de calidad exclusivas para ti, soporte cercano y planes desde 8 hasta 20 Mbps.">
 <meta property="og:image" content="fescom-logo-social.jpg">
 <meta property="og:url" content="">
 <meta property="og:locale" content="es_CO">
 
 <!-- Vista previa en Twitter/X -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="FESCOM Comunicaciones - Internet De Calidad">
-<meta name="twitter:description" content="Internet De Calidad rural en Saladoblanco y Oporapa, Huila. Megas de calidad exclusivas para ti, soporte cercano.">
+<meta name="twitter:title" content="FESCOM Comunicaciones - Internet de Calidad">
+<meta name="twitter:description" content="Internet de Calidad rural en Saladoblanco y Oporapa, Huila. Megas de calidad exclusivas para ti, soporte cercano.">
 <meta name="twitter:image" content="fescom-logo-social.jpg">
 
 <meta name="theme-color" content="#fafaf9">
@@ -2249,6 +2249,32 @@ section{scroll-margin-top:100px}
 .assistant-chip:hover{background:rgba(56,189,248,.25)!important;border-color:#7dd3fc!important}
 .assistant-input-row{background:#051a5c!important;border-top:1px solid rgba(165,232,255,.25)!important}
 .assistant-input{background:rgba(2,10,60,.7)!important;border:1px solid rgba(165,232,255,.40)!important;color:#fff!important}
+
+/* ═════════ PLANES: RADIOENLACE Y FIBRA ÓPTICA ═════════ */
+.plans-group{margin-top:56px;max-width:1040px;margin-left:auto;margin-right:auto}
+.plans-group:first-of-type{margin-top:44px}
+.plans-group-head{display:flex;align-items:center;gap:16px;margin-bottom:22px}
+.plans-group-icon{flex-shrink:0;width:56px;height:56px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,#38bdf8,#1f6bff);box-shadow:0 0 28px rgba(56,189,248,.55),inset 0 1px 0 rgba(255,255,255,.4)}
+.plans-group-icon svg{width:30px;height:30px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.plans-group-title{font-family:'Barlow',sans-serif;font-size:1.7rem;font-weight:700;color:#fff;letter-spacing:-.01em;margin:0;text-align:left}
+.plans-group-sub{color:var(--mute);font-size:.95rem;margin:2px 0 0;line-height:1.4;text-align:left}
+.plans-group-line{flex:1;min-width:24px;height:2px;background:linear-gradient(90deg,rgba(125,211,252,.65),transparent);border-radius:2px}
+.plans-group .plans-grid{grid-template-columns:repeat(auto-fit,minmax(250px,1fr));margin-top:0;gap:18px}
+.plan-top{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px;min-height:26px}
+.plan-top .plan-badge{margin:0!important}
+.plan-tech{display:inline-block;font-size:.7rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.10);color:#bae6fd;border:1px solid rgba(165,232,255,.38)}
+.plan-pre{font-size:.78rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#7dd3fc;min-height:1.3em;margin-bottom:2px}
+.plan-speedline{display:flex;align-items:baseline;gap:8px;flex-wrap:nowrap}
+.plan-speedline .plan-speed{display:inline-block!important}
+.plan-speedline .plan-unit{margin-left:0!important}
+.plan-card.featured .plan-pre,.plan-card.featured .plan-unit,.plan-card.featured .plan-tech{color:#e6f6ff!important}
+.plan-card.featured .plan-tech{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.45)}
+@media(max-width:600px){.plans-group-line{display:none}.plans-group-title{font-size:1.4rem}.plans-group-icon{width:48px;height:48px}}
+
+.plans-group .plans-grid{max-width:none!important;width:100%!important;margin:0!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:18px!important}
+.plans-group .plan-card{padding:28px 24px!important}
+@media(max-width:1000px){.plans-group .plans-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:640px){.plans-group .plans-grid{grid-template-columns:1fr!important}}
 </style>
 </head>
 <body class="dashboard-mode">
@@ -2317,7 +2343,7 @@ section{scroll-margin-top:100px}
       <span>FESCOM</span>
       <span>COMUNICACIONES</span>
     </h1>
-    <p class="hero-sub">Internet De Calidad</p>
+    <p class="hero-sub">Internet de Calidad</p>
     <p class="hero-desc">
       Llevamos conectividad real a las zonas rurales de Saladoblanco y Oporapa.
       Megas dedicadas, sin compartir, con la estabilidad que tu hogar y negocio necesitan.
@@ -2331,7 +2357,7 @@ section{scroll-margin-top:100px}
     <a class="dash-card" href="#planes" onclick="showSection('planes');return false;">
       <div class="dash-card-icon"></div>
       <div class="dash-card-title">Planes</div>
-      <div class="dash-card-desc">Conoce las velocidades y precios de Internet De Calidad.</div>
+      <div class="dash-card-desc">Conoce las velocidades y precios de Internet de Calidad.</div>
     </a>
     <a class="dash-card" href="#speedtest" onclick="showSection('speedtest');return false;">
       <div class="dash-card-icon"></div>
@@ -2386,7 +2412,7 @@ section{scroll-margin-top:100px}
   </div>
   <div class="coverage-item">
     <span class="coverage-icon"></span>
-    Megas De Calidad
+    Megas de Calidad
   </div>
 </div>
 
@@ -2397,74 +2423,113 @@ section{scroll-margin-top:100px}
     <p class="section-label">Nuestros Planes</p>
     <h2 class="section-title">Velocidad real, conexión garantizada</h2>
     <p class="section-desc" style="margin: 0 auto; text-align: center;">
-      Megas de calidad exclusivas para ti. Sin saturar ancho de banda, sin excusas.
+      Elige tu tecnología: Radioenlace o Fibra óptica. Megas de calidad exclusivas para ti, sin saturar ancho de banda, sin excusas.
     </p>
   </div>
 
-  <div class="plans-grid">
-    <!-- Plan Básico 8 Mbps -->
+  <div class="plans-group">
+    <div class="plans-group-head">
+      <div class="plans-group-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12v9M8 21h8"/><circle cx="12" cy="10" r="2"/><path d="M7.8 5.8a6 6 0 0 0 0 8.4M16.2 5.8a6 6 0 0 1 0 8.4M4.9 3a10 10 0 0 0 0 14M19.1 3a10 10 0 0 1 0 14"/></svg></div>
+      <div><h3 class="plans-group-title">Radioenlace</h3><p class="plans-group-sub">Internet por enlace de radio, pensado para llegar a veredas y zonas rurales.</p></div>
+      <div class="plans-group-line"></div>
+    </div>
+    <div class="plans-grid">
     <div class="plan-card">
-      <div class="plan-speed">8</div>
-      <div class="plan-unit">MBPS</div>
-      <div class="plan-type">Plan Básico</div>
+      <div class="plan-top"><span class="plan-tech">Radioenlace</span></div>
+      <div class="plan-pre"></div>
+      <div class="plan-speedline"><div class="plan-speed">10</div><div class="plan-unit">MBPS</div></div>
+      <div class="plan-type">Plan Radio Básico</div>
       <ul class="plan-features">
-        <li>Velocidad y Eficiencia </li>
+        <li>Velocidad y eficiencia</li>
         <li>Ideal para hogar y trabajo remoto</li>
         <li>Navegación, cámaras, videollamadas y streaming</li>
         <li>Soporte técnico incluido</li>
       </ul>
       <a href="#contacto" class="plan-cta">Contratar este Plan</a>
     </div>
-
-    <!-- Plan Essential 10 Mbps DESTACADO -->
     <div class="plan-card featured">
-      <div class="plan-badge">Más Popular</div>
-      <div class="plan-speed">10</div>
-      <div class="plan-unit">MBPS</div>
-      <div class="plan-type">Plan Essential</div>
+      <div class="plan-top"><span class="plan-tech">Radioenlace</span><span class="plan-badge">Más Popular</span></div>
+      <div class="plan-pre">Hasta</div>
+      <div class="plan-speedline"><div class="plan-speed">13</div><div class="plan-unit">MBPS</div></div>
+      <div class="plan-type">Plan Radio Essential</div>
       <ul class="plan-features">
-        <li>Máximo rendimiento</li>
-        <li>Ideal para negocios y múltiples usuarios</li>
-        <li>Streaming 4K, cámaras, videojuegos y trabajo</li>
-        <li>Soporte técnico prioritario</li>
-      </ul>
-      <a href="#contacto" class="plan-cta">Contratar este Plan</a>
-    </div>
-   
-       <!-- Plan Advance hasta 20 Mbps -->
-    <div class="plan-card">
-      <div class="plan-speed">20</div>
-      <div class="plan-unit">MBPS</div>
-      <div class="plan-type">Plan Advance</div>
-      <ul class="plan-features">
-        <li>Velocidad de hasta 20 Mbps</li>
-        <li>Ideal para hogar y trabajo </li>
+        <li>Velocidad de hasta 13 Mbps</li>
+        <li>Ideal para hogar y trabajo con varios dispositivos</li>
         <li>Navegación, cámaras, videollamadas y streaming</li>
         <li>Soporte técnico incluido</li>
       </ul>
       <a href="#contacto" class="plan-cta">Contratar este Plan</a>
     </div>
-   
-   <!-- Plan Supreme hasta 30 Mbps DESTACADO -->
-    <div class="plan-card featured">
-      <div class="plan-badge">Más Popular</div>
-      <div class="plan-speed">30</div>
-      <div class="plan-unit">MBPS</div>
-      <div class="plan-type">Plan Supreme</div>
+    <div class="plan-card">
+      <div class="plan-top"><span class="plan-tech">Radioenlace</span></div>
+      <div class="plan-pre">Hasta</div>
+      <div class="plan-speedline"><div class="plan-speed">16</div><div class="plan-unit">MBPS</div></div>
+      <div class="plan-type">Plan Radio Advance</div>
       <ul class="plan-features">
-        <li>Máximo rendimiento</li>
-        <li>Streaming 4K, cámaras, videojuegos y trabajo</li>
+        <li>Velocidad de hasta 16 Mbps</li>
+        <li>Ideal para hogares y negocios con múltiples usuarios</li>
+        <li>Streaming HD, cámaras, videojuegos y trabajo</li>
         <li>Soporte técnico prioritario</li>
-       <li>Velocidad de hasta 30 Mbps</li>
-        <li>Ideal para hogar y trabajo con multiples dispositivos </li>
+      </ul>
+      <a href="#contacto" class="plan-cta">Contratar este Plan</a>
+    </div>
+    </div>
+  </div>
+
+  <div class="plans-group">
+    <div class="plans-group-head">
+      <div class="plans-group-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 5c4 0 6 6 10 6s6-6 10-6"/><path d="M2 11c4 0 6 6 10 6s6-6 10-6"/><path d="M2 17c4 0 6 6 10 6s6-6 10-6" transform="translate(0 -2)"/></svg></div>
+      <div><h3 class="plans-group-title">Fibra óptica</h3><p class="plans-group-sub">Conexión por cable de fibra: estabilidad y rendimiento para tu hogar o negocio.</p></div>
+      <div class="plans-group-line"></div>
+    </div>
+    <div class="plans-grid">
+    <div class="plan-card">
+      <div class="plan-top"><span class="plan-tech">Fibra óptica</span></div>
+      <div class="plan-pre">Hasta</div>
+      <div class="plan-speedline"><div class="plan-speed">15</div><div class="plan-unit">MBPS</div></div>
+      <div class="plan-type">Plan Fibra Essential</div>
+      <ul class="plan-features">
+        <li>Conexión por fibra óptica, estable y confiable</li>
+        <li>Velocidad de hasta 15 Mbps</li>
+        <li>Ideal para hogar y trabajo remoto</li>
+        <li>Navegación, cámaras, videollamadas y streaming</li>
         <li>Soporte técnico incluido</li>
       </ul>
       <a href="#contacto" class="plan-cta">Contratar este Plan</a>
     </div>
+    <div class="plan-card featured">
+      <div class="plan-top"><span class="plan-tech">Fibra óptica</span><span class="plan-badge">Más Popular</span></div>
+      <div class="plan-pre">Hasta</div>
+      <div class="plan-speedline"><div class="plan-speed">25</div><div class="plan-unit">MBPS</div></div>
+      <div class="plan-type">Plan Fibra Advance</div>
+      <ul class="plan-features">
+        <li>Conexión por fibra óptica, estable y confiable</li>
+        <li>Velocidad de hasta 25 Mbps</li>
+        <li>Ideal para hogares y negocios con varios dispositivos</li>
+        <li>Streaming, cámaras, videojuegos y trabajo</li>
+        <li>Soporte técnico prioritario</li>
+      </ul>
+      <a href="#contacto" class="plan-cta">Contratar este Plan</a>
+    </div>
+    <div class="plan-card">
+      <div class="plan-top"><span class="plan-tech">Fibra óptica</span></div>
+      <div class="plan-pre">Hasta</div>
+      <div class="plan-speedline"><div class="plan-speed">35</div><div class="plan-unit">MBPS</div></div>
+      <div class="plan-type">Plan Fibra Supreme</div>
+      <ul class="plan-features">
+        <li>Conexión por fibra óptica, estable y confiable</li>
+        <li>Velocidad de hasta 35 Mbps</li>
+        <li>Ideal para negocios y múltiples usuarios</li>
+        <li>Streaming 4K, cámaras, videojuegos y teletrabajo</li>
+        <li>Soporte técnico prioritario</li>
+      </ul>
+      <a href="#contacto" class="plan-cta">Contratar este Plan</a>
+    </div>
+    </div>
   </div>
 
   <p style="text-align:center; margin-top:32px; font-size:0.82rem; color:rgba(255,255,255,0.4); letter-spacing:1px;">
-    * Consulta precios y disponibilidad en tu zona comunicándote con nosotros.
+    * Consulta precios y disponibilidad (radioenlace o fibra óptica) en tu zona comunicándote con nosotros.
   </p>
 </section>
 
@@ -2485,8 +2550,8 @@ section{scroll-margin-top:100px}
     </div>
     <div class="why-card">
       <div class="why-icon"></div>
-      <div class="why-title">Megas De Calidad</div>
-      <p class="why-desc">Tu ancho de banda. Sin Saturar tu velocidad.</p>
+      <div class="why-title">Megas de Calidad</div>
+      <p class="why-desc">Tu ancho de banda. Sin saturar tu velocidad.</p>
     </div>
     <div class="why-card">
       <div class="why-icon"></div>
@@ -2539,7 +2604,7 @@ section{scroll-margin-top:100px}
             </h3>
             <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 14px;">
               <li style="font-family: 'Barlow', sans-serif; color: var(--text-muted); font-size: 1.05rem; line-height: 1.6;">
-                <strong style="color: #ffffff;">Conexión Física por Cable:</strong> Es ideal realizar la prueba conectado por cable de red, ya que las mediciones por WiFi suelen verse afectadas por la distancia, los muros y las interferencias del entorno,si realizas la prueba por WiFi acercate lo que más puedas al router.
+                <strong style="color: #ffffff;">Conexión Física por Cable:</strong> Es ideal realizar la prueba conectado por cable de red, ya que las mediciones por wifi suelen verse afectadas por la distancia, los muros y las interferencias del entorno. Si realizas la prueba por wifi, acércate lo más que puedas al router.
               </li>
               <li style="font-family: 'Barlow', sans-serif; color: var(--text-muted); font-size: 1.05rem; line-height: 1.6;">
                 <strong style="color: #ffffff;">Detén los Consumos Activos:</strong> Asegúrate de pausar cualquier descarga de archivos, actualizaciones automáticas de consolas de videojuegos o reproducción de video en alta definición mientras realizas el test para evitar falsos resultados.
@@ -2560,7 +2625,7 @@ section{scroll-margin-top:100px}
                 <strong style="color: #ffffff;">Posible Saturación Interna:</strong> Muchas veces la lentitud se debe a procesos automáticos o a múltiples dispositivos conectados simultáneamente (celulares, televisores, descargas en segundo plano) consumiendo el ancho de banda contratado sin que te des cuenta.
               </li>
               <li style="font-family: 'Barlow', sans-serif; color: var(--text-muted); font-size: 1.05rem; line-height: 1.6;">
-                <strong style="color: #ffffff;">Reinicio Eléctrico de tus Equipos (Solución Rápida):</strong> Desconecta tu equipo ONU (Módem) o Router de la toma de corriente durante 10 segundos y vuélvelo a conectar. Esta acción libera la memoria caché colgada de los dispositivos inalámbricos, optimiza las frecuencias de los canales de transmisión y restablece el servicio a su velocidad óptima de forma inmediata.
+                <strong style="color: #ffffff;">Reinicio Eléctrico de tus Equipos (Solución Rápida):</strong> Desconecta tu equipo ONU (módem) o router de la toma de corriente durante 10 segundos y vuélvelo a conectar. Esta acción libera la memoria caché colgada de los dispositivos inalámbricos, optimiza las frecuencias de los canales de transmisión y restablece el servicio a su velocidad óptima de forma inmediata.
               </li>
             </ul>
           </div>
@@ -2681,7 +2746,7 @@ section{scroll-margin-top:100px}
           <li>Revisa que el router no esté muy cerca de otros aparatos electrónicos, hornos microondas, o pegado a paredes muy gruesas.</li>
           <li>Reinicia el router.</li>
           <li>Anota a qué horas se corta. Ese dato nos ayuda mucho a identificar si es un problema de tu casa o de la red.</li>
-          <li>Escríbenos contándonos el patrón que notaste (por ejemplo, "se corta cada noche sobre las 8pm").</li>
+          <li>Escríbenos contándonos el patrón que notaste (por ejemplo, "se corta cada noche sobre las 8 PM").</li>
         </ol>
       </div>
     </div>
@@ -2703,7 +2768,7 @@ section{scroll-margin-top:100px}
 
   <div class="faq-cta">
     <p>¿Ya intentaste estos pasos y el problema sigue?</p>
-    <a href="https://wa.me/573241100037?text=Hola%20FESCOM%20Comunicaciones!%20Ya%20intent%C3%A9%20los%20pasos%20de%20la%20gu%C3%ADa%20de%20soporte%20y%20el%20problema%20sigue.%20Necesito%20ayuda." target="_blank" class="gestion-whatsapp-btn gestion-support-btn" style="max-width:340px; margin:0 auto;">
+    <a href="https://wa.me/573241100037?text=%C2%A1Hola,%20FESCOM%20Comunicaciones!%20Ya%20intent%C3%A9%20los%20pasos%20de%20la%20gu%C3%ADa%20de%20soporte%20y%20el%20problema%20sigue.%20Necesito%20ayuda." target="_blank" class="gestion-whatsapp-btn gestion-support-btn" style="max-width:340px; margin:0 auto;">
       Reportar Falla / Soporte
     </a>
   </div>
@@ -2734,7 +2799,7 @@ section{scroll-margin-top:100px}
         <span class="faq-icon">+</span>
       </button>
       <div class="faq-answer">
-        <p>Escríbenos por WhatsApp contándonos qué pasa (sin señal, se corta intermitente, luces del router, etc.). Entre más detalles nos des, más rápido podemos ayudarte o programar una visita técnica.</p>
+        <p>Escríbenos por WhatsApp contándonos qué pasa (sin señal, se corta intermitente, luces del router, etc.). Cuantos más detalles nos des, más rápido podemos ayudarte o programar una visita técnica.</p>
       </div>
     </div>
     <div class="faq-item">
@@ -2883,7 +2948,7 @@ section{scroll-margin-top:100px}
             <span>¿Tienen cobertura en mi zona?</span>
           </label>
           <label class="wa-check-item">
-            <input type="checkbox" class="wa-check" value="¿Cuántos Megas incluye el plan y son dedicados o compartidos?" />
+            <input type="checkbox" class="wa-check" value="¿Cuántos megas incluye el plan y son dedicados o compartidos?" />
             <span>Velocidad y tipo de megas</span>
           </label>
           <label class="wa-check-item">
@@ -3037,7 +3102,7 @@ function enviarWhatsApp() {
   if (!municipio) { alert('Por favor indica tu municipio o vereda.'); return; }
   if (checkboxes.length === 0 && !mensajeExtra) { alert('Por favor selecciona al menos una consulta o escribe un mensaje.'); return; }
 
-  let msg = `👋 *Hola, FESCOM Comunicaciones!*\n\n`;
+  let msg = `👋 *¡Hola, FESCOM Comunicaciones!*\n\n`;
   msg += `*Nombre:* ${nombre}\n`;
   msg += `*Municipio/Vereda:* ${municipio}\n`;
   if (telefono) msg += `*Teléfono:* ${telefono}\n`;
@@ -3208,8 +3273,8 @@ function enviarWhatsApp() {
     },
     {
       id: 'planes',
-      keywords: ['plan', 'planes', 'precio', 'precios', 'megas', 'mbps', 'velocidad', 'cuanto cuesta', 'contratar', 'tarifa', 'valor del plan'],
-      respuesta: 'Tenemos planes de Internet De Calidad desde 8 hasta 20 Mbps, según lo que necesites (hogar, negocio, cámaras, trabajo remoto). Puedes verlos en <a href="#planes" onclick="showSection(\'planes\');toggleAssistant(false);return false;">Nuestros Planes</a>. Los precios exactos por zona te los confirmamos por WhatsApp.'
+      keywords: ['plan', 'planes', 'precio', 'precios', 'megas', 'mbps', 'velocidad', 'cuanto cuesta', 'contratar', 'tarifa', 'valor del plan', 'radio', 'radioenlace', 'fibra', 'fibra optica', 'fibra óptica'],
+      respuesta: 'Tenemos planes por <strong>Radioenlace</strong> (10, hasta 13 y hasta 16 Mbps) y por <strong>Fibra óptica</strong> (hasta 15, 25 y 35 Mbps), según lo que necesites (hogar, negocio, cámaras, trabajo remoto). Puedes verlos en <a href="#planes" onclick="showSection(\'planes\');toggleAssistant(false);return false;">Nuestros Planes</a>. Los precios exactos por zona te los confirmamos por WhatsApp.'
     },
     {
       id: 'sin_senal',
@@ -3224,7 +3289,7 @@ function enviarWhatsApp() {
         'no carga ninguna pagina', 'internet muerto', 'wifi muerto', 'se me daño el internet',
         'se me daño el wifi', 'no me deja entrar a internet', 'estoy sin servicio', 'no tengo servicio'
       ],
-      respuesta: 'Prueba esto primero: 1) revisa que el router tenga luces encendidas, 2) desconéctalo, espera 30 segundos y vuelve a conectarlo, 3) espera 2-3 minutos. Si sigue igual, revisa la <a href="#ayuda" onclick="showSection(\'ayuda\');toggleAssistant(false);return false;">Guía de Soporte</a> completa o repórtalo por WhatsApp.'
+      respuesta: 'Prueba esto primero: 1) revisa que el router tenga luces encendidas, 2) desconéctalo, espera 30 segundos y vuelve a conectarlo, 3) espera de 2 a 3 minutos. Si sigue igual, revisa la <a href="#ayuda" onclick="showSection(\'ayuda\');toggleAssistant(false);return false;">Guía de Soporte</a> completa o repórtalo por WhatsApp.'
     },
     {
       id: 'lento',
@@ -3234,7 +3299,7 @@ function enviarWhatsApp() {
         'esta lenta la internet', 'no carga bien', 'demora mucho', 'se demora mucho', 'va como caminando',
         'esta como tortuga'
       ],
-      respuesta: 'Reinicia el router y revisa cuántos dispositivos están conectados al tiempo (muchos a la vez bajan la velocidad). Puedes medir tu velocidad real en <a href="#speedtest" onclick="showSection(\'speedtest\');toggleAssistant(false);return false;">Test de Velocidad</a>.'
+      respuesta: 'Reinicia el router y revisa cuántos dispositivos están conectados al mismo tiempo (muchos a la vez bajan la velocidad). Puedes medir tu velocidad real en <a href="#speedtest" onclick="showSection(\'speedtest\');toggleAssistant(false);return false;">Test de Velocidad</a>.'
     },
     {
       id: 'camaras',
@@ -3254,7 +3319,7 @@ function enviarWhatsApp() {
     {
       id: 'asesor',
       keywords: ['asesor', 'humano', 'persona', 'hablar con alguien', 'agente', 'representante'],
-      respuesta: 'Con gusto te comunico con un asesor. Dale clic al botón de abajo para escribirnos directo por WhatsApp. 👇'
+      respuesta: 'Con gusto te comunico con un asesor. Haz clic en el botón de abajo para escribirnos directo por WhatsApp. 👇'
     },
     {
       id: 'cancelar',
@@ -3284,7 +3349,7 @@ function enviarWhatsApp() {
     {
       id: 'empresa',
       keywords: ['nombre de la empresa', 'como se llama la empresa', 'quienes son ustedes', 'de donde son', 'quien es fescom'],
-      respuesta: 'Somos <strong>FESCOM Comunicaciones</strong>, una empresa local que lleva Internet De Calidad a zonas rurales de Saladoblanco y Oporapa, Huila. Conoce más sobre nosotros en <a href="#nosotros" onclick="showSection(\'nosotros\');toggleAssistant(false);return false;">Nosotros</a>.'
+      respuesta: 'Somos <strong>FESCOM Comunicaciones</strong>, una empresa local que lleva Internet de Calidad a zonas rurales de Saladoblanco y Oporapa, Huila. Conoce más sobre nosotros en <a href="#nosotros" onclick="showSection(\'nosotros\');toggleAssistant(false);return false;">Nosotros</a>.'
     },
     {
       id: 'mora',
@@ -3309,7 +3374,7 @@ function enviarWhatsApp() {
     {
       id: 'limite_datos',
       keywords: ['limite de datos', 'se acaba el internet', 'datos ilimitados', 'tope de consumo', 'tiene limite'],
-      respuesta: 'Nuestros planes de Internet De Calidad no tienen límite de datos: navega, trabaja y transmite todo lo que necesites dentro de la velocidad de tu plan.'
+      respuesta: 'Nuestros planes de Internet de Calidad no tienen límite de datos: navega, trabaja y transmite todo lo que necesites dentro de la velocidad de tu plan.'
     },
     {
       id: 'equipo_danado',
@@ -3334,7 +3399,7 @@ function enviarWhatsApp() {
     {
       id: 'dispositivos',
       keywords: ['cuantos dispositivos', 'cuantos aparatos puedo conectar', 'varios celulares', 'compartir wifi'],
-      respuesta: 'Puedes conectar varios dispositivos a la vez (celulares, TV, cámaras, computador). Eso sí, entre más dispositivos activos al mismo tiempo, más se reparte la velocidad disponible en tu plan.'
+      respuesta: 'Puedes conectar varios dispositivos a la vez (celulares, TV, cámaras, computador). Eso sí, cuantos más dispositivos haya activos al mismo tiempo, más se reparte la velocidad disponible en tu plan.'
     },
     {
       id: 'mudanza',
@@ -3968,8 +4033,8 @@ function enviarWhatsApp() {
       else { notaDias = `Vence en ${dias} día(s)`; }
     }
 
-    const waMsgPago = encodeURIComponent("Hola FESCOM Comunicaciones! Consulté mi estado con la cédula " + cedula + ". Voy a reportar un pago.");
-    const waMsgFalla = encodeURIComponent("Hola FESCOM Comunicaciones! Soy el cliente con cédula " + cedula + " (" + cliente.nombre + "). Tengo una falla o problema con mi servicio y necesito soporte técnico.");
+    const waMsgPago = encodeURIComponent("¡Hola, FESCOM Comunicaciones! Consulté mi estado con la cédula " + cedula + ". Voy a reportar un pago.");
+    const waMsgFalla = encodeURIComponent("¡Hola, FESCOM Comunicaciones! Soy el cliente con cédula " + cedula + " (" + cliente.nombre + "). Tengo una falla o problema con mi servicio y necesito soporte técnico.");
 
     const iconoRecibo = (function(u){ return u ? '<a href="' + u + '" target="_blank" rel="noopener" class="gestion-recibo-icon" title="Descargar recibo" aria-label="Descargar recibo"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg></a>' : ''; })(urlReciboDescarga(cliente.recibo));
     const filasHistorial = historial.length ? historial.map((p, idx) => `
