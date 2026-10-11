@@ -2133,6 +2133,122 @@ nav{min-height:90px!important}
 section{scroll-margin-top:100px}
 .footer-logo img{height:112px!important;width:auto!important;object-fit:contain!important}
 .footer-brand-name{display:none!important}
+
+/* ═════════ TEMA AZUL EMPRESA: TARJETAS Y TEXTOS (v3) ═════════ */
+:root{
+  --ink:#ffffff; --mute:rgba(224,242,255,.90); --soft:rgba(186,222,255,.78); --line:rgba(165,232,255,.26);
+  --bg:#061a63; --paper:#071a63; --acc:#38bdf8; --white:#ffffff;
+  --card-bg:rgba(255,255,255,.06); --card-border:rgba(165,232,255,.28);
+  --blue-light:#93c5fd; --blue-glow:#60a5fa; --text-muted:#b6cdf5; --dark-bg:#040d2e;
+  --fs-card:linear-gradient(155deg,rgba(13,59,176,.94) 0%,rgba(8,38,125,.96) 48%,rgba(5,27,94,.97) 100%);
+  --fs-edge:rgba(125,211,252,.42);
+}
+.dash-card,.plan-card,.why-card,.municipality,.contact-card,.wa-form-wrapper,.gestion-search-box,.faq-cta{
+  background:var(--fs-card)!important;border:1px solid var(--fs-edge)!important;color:#fff;
+  box-shadow:0 16px 44px rgba(1,8,40,.5),inset 0 1px 0 rgba(255,255,255,.18),0 0 0 1px rgba(56,189,248,.10)!important}
+.dash-card:hover,.plan-card:hover,.why-card:hover,.contact-card:hover,.municipality:hover{
+  border-color:#7dd3fc!important;transform:translateY(-3px)!important;
+  box-shadow:0 20px 54px rgba(1,8,40,.55),0 0 36px rgba(56,189,248,.55),inset 0 1px 0 rgba(255,255,255,.25)!important}
+
+/* Inicio */
+.dash-card-title{color:#fff!important}
+.dash-card-desc{color:var(--mute)!important}
+.dash-card::after{color:#7dd3fc!important}
+.dash-card:hover::after{color:#fff!important}
+.dash-card:last-child{background:linear-gradient(135deg,#1f6bff,#38bdf8)!important;border-color:rgba(255,255,255,.55)!important}
+.dash-card:last-child .dash-card-desc{color:#eaf6ff!important}
+
+/* Planes */
+.plan-speed{background:linear-gradient(135deg,#ffffff,#7dd3fc)!important;-webkit-background-clip:text!important;background-clip:text!important;-webkit-text-fill-color:transparent!important;color:transparent!important}
+.plan-unit{color:#7dd3fc!important}
+.plan-type{color:#fff!important}
+.plan-features{border-top-color:rgba(165,232,255,.25)!important}
+.plan-features li{color:var(--mute)!important}
+.plan-features li::before{background:rgba(56,189,248,.24)!important;color:#bae6fd!important}
+.plan-badge{background:rgba(56,189,248,.2)!important;color:#bae6fd!important;border:1px solid rgba(125,211,252,.45)!important}
+.plan-cta{border:1px solid rgba(165,232,255,.55)!important;color:#fff!important;background:rgba(255,255,255,.06)!important}
+.plan-cta:hover,.plan-card.featured .plan-cta{background:linear-gradient(135deg,#38bdf8,#1f6bff)!important;border-color:transparent!important;color:#fff!important}
+.plan-card.featured{background:linear-gradient(155deg,#1f6bff 0%,#0a3fd6 50%,#072a9a 100%)!important;border:2px solid #7dd3fc!important;
+  box-shadow:0 0 0 4px rgba(56,189,248,.22),0 22px 60px rgba(1,8,40,.55),0 0 54px rgba(56,189,248,.6)!important}
+
+/* Nosotros / Test de velocidad / Cobertura */
+.why-title{color:#fff!important}
+.why-desc{color:var(--mute)!important}
+#speedtest h3[style]{color:#fff!important}
+#speedtest li[style]{color:var(--mute)!important}
+#speedtest li strong,#speedtest li strong[style]{color:#fff!important}
+#speedtest div[style*="border-top"]{border-color:var(--line)!important}
+.municipality-name{color:#fff!important}
+.municipality-dept{color:var(--mute)!important}
+
+/* Contacto */
+.contact-label{color:#7dd3fc!important}
+.contact-value{color:#fff!important}
+.contact-note{color:var(--mute)!important}
+
+/* Formulario WhatsApp y campos */
+.wa-form-wrapper .section-label{color:#7dd3fc!important}
+.wa-form-header,.gestion-search-header{border-bottom:1px solid rgba(165,232,255,.22)!important}
+.wa-form-title,.gestion-search-title{color:#fff!important}
+.wa-form-subtitle,.wa-privacy-note,.gestion-search-sub{color:var(--mute)!important}
+.wa-label{color:#fff!important}
+.wa-input,.gestion-input{background:rgba(2,10,60,.55)!important;border:1px solid rgba(165,232,255,.40)!important;color:#fff!important}
+.wa-input::placeholder,.gestion-input::placeholder,.assistant-input::placeholder{color:rgba(186,222,255,.62)!important}
+.wa-input:focus,.gestion-input:focus,.assistant-input:focus{border-color:#38bdf8!important;background:rgba(2,10,60,.78)!important;box-shadow:0 0 0 3px rgba(56,189,248,.3)!important}
+.wa-input option{background:#07216f;color:#fff}
+.wa-check-item{background:rgba(255,255,255,.07)!important;border:1px solid rgba(165,232,255,.30)!important;color:#fff!important}
+.wa-check-item:hover{border-color:#7dd3fc!important}
+.wa-check-item:has(.wa-check:checked){background:rgba(56,189,248,.22)!important;border-color:#38bdf8!important}
+
+/* Gestión del cliente */
+.gestion-note,.gestion-loading{color:var(--soft)!important}
+.gestion-result-card{background:rgba(2,12,70,.62)!important;border:1px solid rgba(165,232,255,.30)!important;box-shadow:none!important}
+.gestion-result-card.error-card{background:rgba(127,29,29,.42)!important;border-color:rgba(248,113,113,.55)!important}
+.gestion-result-title{color:#7dd3fc!important}
+.gestion-result-title.error-title{color:#fca5a5!important}
+.gestion-result-card.error-card p{color:#ffe4e6!important}
+.gestion-info-label{color:#9fd3ff!important}
+.gestion-info-value,.gestion-info-value[style*="#ffffff"],.gestion-info-value[style*="#60a5fa"]{color:#fff!important}
+.gestion-info-value[style*="inline-flex"]{background:rgba(56,189,248,.2)!important;border:1px solid rgba(125,211,252,.5)!important;color:#e0f2fe!important}
+.gestion-status-badge.activo{background:rgba(34,197,94,.22)!important;color:#86efac!important}
+.gestion-status-badge.porvencer{background:rgba(245,158,11,.22)!important;color:#fcd34d!important}
+.gestion-status-badge.suspendido{background:rgba(239,68,68,.24)!important;color:#fecaca!important}
+.gestion-dias-nota{color:var(--mute)!important}
+.gestion-historial{border-top-color:var(--line)!important}
+.gestion-historial-title{color:#fff!important}
+.gestion-historial-table th{color:#9fd3ff!important;border-color:var(--line)!important}
+.gestion-historial-table td{color:#fff!important;border-color:rgba(165,232,255,.14)!important}
+.gestion-result-card div[style*="rgba(255,255,255,0.02)"]{background:rgba(255,255,255,.07)!important;border:1px solid rgba(165,232,255,.30)!important;color:var(--mute)!important}
+.gestion-result-card div[style*="rgba(255,255,255,0.02)"] strong{color:#fff!important}
+.gestion-copy-btn{background:rgba(255,255,255,.10)!important;border:1px solid rgba(165,232,255,.5)!important;color:#fff!important}
+.gestion-whatsapp-btn.gestion-support-btn,.gestion-support-btn,a.gestion-whatsapp-btn[style*="linear-gradient"]{background:rgba(255,255,255,.10)!important;color:#fff!important;border:1px solid rgba(165,232,255,.55)!important}
+.gestion-support-btn:hover{background:rgba(255,255,255,.20)!important;border-color:#fff!important}
+.gestion-recibo-icon{background:rgba(56,189,248,.2)!important;border:1px solid rgba(125,211,252,.55)!important;color:#bae6fd!important}
+.gestion-recibo-icon:hover{background:#38bdf8!important;border-color:#38bdf8!important;color:#031a5c!important}
+.gestion-remember button{color:#bfe3ff!important}
+.gestion-spinner{border-color:rgba(165,232,255,.3)!important;border-top-color:#7dd3fc!important}
+
+/* Avisos */
+.avisos-bar-item{background:linear-gradient(135deg,rgba(13,59,176,.96),rgba(5,27,94,.98))!important;border:1px solid var(--fs-edge)!important;border-left:4px solid #38bdf8!important;box-shadow:0 10px 30px rgba(1,8,40,.5)!important}
+.avisos-bar-item.tipo-mantenimiento{border-left-color:#f59e0b!important}
+.avisos-bar-item.tipo-falla{border-left-color:#ef4444!important}
+.avisos-bar-title,.avisos-bar-msg strong{color:#fff!important}
+.avisos-bar-msg,.avisos-bar-tag{color:var(--mute)!important}
+.avisos-bar-close{color:#bfe3ff!important}
+
+/* Asistente virtual */
+.assistant-panel{background:linear-gradient(180deg,#0a2d94,#051a5c)!important;border:1px solid var(--fs-edge)!important;box-shadow:0 24px 60px rgba(1,8,40,.6),0 0 40px rgba(56,189,248,.25)!important}
+.assistant-header{background:linear-gradient(135deg,#1f6bff,#0a3fd6)!important;border-bottom:1px solid rgba(165,232,255,.3)!important}
+.assistant-title{color:#fff!important}
+.assistant-subtitle,.assistant-close{color:#d6ecff!important}
+.assistant-messages,.assistant-quick{background:rgba(2,10,60,.55)!important}
+.assistant-msg.bot{background:rgba(255,255,255,.10)!important;border:1px solid rgba(165,232,255,.28)!important;color:#fff!important}
+.assistant-msg.user{background:linear-gradient(135deg,#38bdf8,#1f6bff)!important;color:#fff!important}
+.assistant-msg a{color:#7dd3fc!important;text-decoration:underline}
+.assistant-chip,.assistant-suggest-toggle{background:rgba(255,255,255,.10)!important;border:1px solid rgba(165,232,255,.40)!important;color:#fff!important}
+.assistant-chip:hover{background:rgba(56,189,248,.25)!important;border-color:#7dd3fc!important}
+.assistant-input-row{background:#051a5c!important;border-top:1px solid rgba(165,232,255,.25)!important}
+.assistant-input{background:rgba(2,10,60,.7)!important;border:1px solid rgba(165,232,255,.40)!important;color:#fff!important}
 </style>
 </head>
 <body class="dashboard-mode">
